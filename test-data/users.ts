@@ -26,3 +26,16 @@ export const wrongPasswordUser: User = {
   scenario: 'Incorrect Password'
 };
 
+export const adminUser = {
+  emailId: 'admin@admin.com',
+  password: 'admin123',
+};
+
+export const coupons = {
+  valid20: 'RAMADAN20',
+  invalid: 'NOT-A-CODE-123',
+};
+
+export const uniqueEmail = () => `pw_${Date.now()}_${Math.floor(Math.random() * 1e6)}@example.com`;
+export const uniqueProductName = (prefix = 'PW-E2E') =>
+  `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;

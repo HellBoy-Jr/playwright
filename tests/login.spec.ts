@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/test-fixtures';
-import { LoginPage } from '../pages/LoginPage';
+
 import {
   validUser,
   wrongPasswordUser,
