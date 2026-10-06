@@ -1,0 +1,1041 @@
+# DELOITTE SENIOR SDET INTERVIEW PREPARATION NOTEBOOK: MODULAR GENERATION PROMPTS
+This file contains individual, highly granular engineering prompts optimized for generating your preparation notebook topic-by-topic. Paste each prompt into your LLM one by one to assemble a highly rigorous, non-trivial, senior-level technical masterclass document.
+
+================================================================================
+CORE DELIVERY CONTRACT FOR EACH PROMPT:
+Every prompt requires the AI to adhere to these strict delivery constraints:
+1. THEORY & CORE MECHANICS: Low-level memory layouts, protocols, network states, and design logic.
+2. ENTERPRISE RELEVANCE: Exactly how this influences multi-threaded automation at a 5,000+ test scale.
+3. PRODUCTION-READY CODE: Fully functional code blocks (Java, TS, SQL, or YAML) featuring optimal error boundaries and high-efficiency structures.
+4. HIGH-STAKES SCENARIO: A realistic triage and resolution playbook for senior architectural failures.
+5. ANTI-PATTERNS & PITFALLS: Critical mistakes engineers make and the explicit architectural fixes.
+================================================================================
+
+---
+
+### PROMPT 0: SECTION 0 — INTERVIEW STRATEGY
+Act as a Principal SDET and Elite Tech Interview Coach. Generate comprehensive, long-form preparation notes for "SECTION 0: Interview Strategy" matching the Deloitte Senior SDET competency baseline. Break this down systematically into the following subsections:
+- 0.1 Deloitte Role Expectations
+- 0.2 Senior SDET Competency Matrix
+- 0.3 Interview-Round Strategy
+- 0.4 Technical vs Scenario-Based Questions
+- 0.5 Project Deep-Dive Strategy
+- 0.6 Coding-Round Strategy
+- 0.7 Automation Architecture Strategy
+- 0.8 Behavioral / Leadership Questions
+- 0.9 STAR Answer Structure
+- 0.10 Questions to Ask the Interviewer
+- 0.11 Final Interview Checklist
+- 0.12 Current Baseline and Gaps
+Ensure it establishes a strategic roadmap focused on engineering systems, architectural boundaries, and leadership metrics rather than elementary tool operations. Deliver raw Markdown text containing clear subheadings for each item.
+
+---
+
+### PROMPT 1: SECTION 1 — CORE JAVA FOUNDATIONS
+Act as a Principal Java Developer and Senior SDET Architect. Generate deeply technical, long-form preparation notes for "SECTION 1: Core Java Foundations". Run every topic through the Core Delivery Contract (Theory, Framework Relevance, Production Code, Triage Scenario, and Anti-Patterns). Structure exactly by these subheadings:
+- 1.1 JVM / JDK / JRE (Low-level execution loops)
+- 1.2 Java Compilation and Bytecode
+- 1.3 Class Loading Basics (Custom ClassLoaders in test isolated plugins)
+- 1.4 Stack vs Heap (Thread stacks, allocation traps, and OutOfMemoryError profiles)
+- 1.5 Primitive vs Reference Types
+- 1.6 Pass-by-Value in Java (The explicit reference manipulation mechanics)
+- 1.7 Object Creation and References
+- 1.8 Garbage Collection — SDET Interview Depth (G1GC vs ZGC tuning, memory leaks via unclosed streams)
+- 1.9 Immutability
+- 1.10 Common Java Memory Questions
+Deliver output in raw Markdown code. Ensure code snippets focus on memory efficiency and diagnostic profiling.
+
+---
+
+### PROMPT 2: SECTION 2 — OBJECT-ORIENTED PROGRAMMING
+Act as a Principal Software Engineer. Generate highly advanced preparation notes for "SECTION 2: Object-Oriented Programming" tailored explicitly to senior framework design. Process each topic using the Core Delivery Contract. Address every subheading:
+- 2.1 Encapsulation
+- 2.2 Inheritance
+- 2.3 Polymorphism
+- 2.4 Abstraction
+- 2.5 Composition vs Inheritance
+- 2.6 Association / Aggregation / Composition
+- 2.7 Interface vs Abstract Class
+- 2.8 Default and Static Interface Methods
+- 2.9 Method Overloading
+- 2.10 Method Overriding
+- 2.11 Dynamic Method Dispatch
+- 2.12 Constructor Chaining
+- 2.13 `this` vs `super`
+- 2.14 Access Modifiers
+- 2.15 `static`
+- 2.16 `final`
+- 2.17 SOLID Principles
+- 2.18 SOLID Applied to Test Automation
+- 2.19 OOP Design Questions for SDET
+Provide production-ready Java code examples demonstrating clean decoupling of test layers. Output as raw Markdown.
+
+---
+
+### PROMPT 3: SECTION 3 — ADVANCED JAVA CONCEPTS
+Act as a Principal Java Engineer. Write complete, exhaustive technical notes for "SECTION 3: Advanced Java Concepts" applying the Core Delivery Contract to each subheading. Focus deeply on thread safety, reflection risks, and structural data mechanisms:
+- 3.1 `equals()` / `hashCode()` Contract (The low-level mechanics of breaking collections)
+- 3.2 `toString()`
+- 3.3 Mutable Objects as Map Keys (Memory leak and lookup failure triage)
+- 3.4 String Immutability
+- 3.5 String Pool
+- 3.6 `==` vs `equals()`
+- 3.7 `String` vs `StringBuilder` vs `StringBuffer`
+- 3.8 `final` vs Immutable
+- 3.9 Wrapper Classes
+- 3.10 Autoboxing / Unboxing
+- 3.11 `enum`
+- 3.12 Inner Classes
+- 3.13 Anonymous Classes
+- 3.14 Nested Static Classes
+- 3.15 Varargs
+- 3.16 Annotations
+- 3.17 Reflection — Interview Awareness
+- 3.18 Serialization / Deserialization
+- 3.19 `transient`
+- 3.20 `volatile`
+- 3.21 `synchronized`
+- 3.22 `Atomic` Classes
+- 3.23 Immutability and Thread Safety
+- 3.24 Common Advanced-Java Trap Questions
+Provide syntax-highlighted code blocks for each pattern. Output as clean Markdown.
+
+---
+
+### PROMPT 4: SECTION 4 — JAVA COLLECTIONS FRAMEWORK
+Act as an Elite Tech Interview Coach. Generate comprehensive, production-grade technical notes for "SECTION 4: Java Collections Framework" mapping directly to automation concurrency needs. Process every single item through the Core Delivery Contract:
+- 4.1 Collection Hierarchy
+- 4.2 List / Set / Map / Queue / Deque
+- 4.3 ArrayList
+- 4.4 LinkedList
+- 4.5 CopyOnWriteArrayList (Thread-safe list traversal during test execution)
+- 4.6 HashSet
+- 4.7 LinkedHashSet
+- 4.8 TreeSet
+- 4.9 HashMap
+- 4.10 LinkedHashMap
+- 4.11 TreeMap
+- 4.12 ConcurrentHashMap
+- 4.13 Queue Implementations
+- 4.14 Deque
+- 4.15 PriorityQueue
+- 4.16 ArrayList vs LinkedList
+- 4.17 HashSet vs LinkedHashSet vs TreeSet
+- 4.18 HashMap vs LinkedHashMap vs TreeMap
+- 4.19 HashMap vs Hashtable vs ConcurrentHashMap
+- 4.20 Collection Selection Scenarios
+- 4.21 Collection Time Complexities
+- 4.22 Collections in Automation Frameworks
+Include clean code snippets showing explicit use cases in multi-threaded environments. Output as Markdown.
+
+---
+
+### PROMPT 5: SECTION 5 — HASHMAP AND HASH-BASED COLLECTIONS
+Act as a Staff Engineer. Write a granular, deep-dive architectural guide for "SECTION 5: HashMap and Hash-Based Collections" exploring memory layouts and hash functions. Apply the Core Delivery Contract to all subsections:
+- 5.1 Hashing Mental Model
+- 5.2 `hashCode()`
+- 5.3 Hash Spreading
+- 5.4 Bucket Concept
+- 5.5 Bucket Index
+- 5.6 Collision
+- 5.7 `equals()` During Lookup
+- 5.8 Updating an Existing Key
+- 5.9 Lookup Flow
+- 5.10 Removal Flow
+- 5.11 Resizing
+- 5.12 Load Factor
+- 5.13 Treeification — Conceptual Level
+- 5.14 HashMap Complexity
+- 5.15 Common HashMap Interview Questions
+- 5.16 HashSet Internals — Conceptual Level
+Provide detailed step-by-step memory tracking code blocks. Output as raw Markdown.
+
+---
+
+### PROMPT 6: SECTION 6 — GENERICS
+Act as a Principal Automation Architect. Generate technical notes for "SECTION 6: Generics" focusing on framework level type boundaries. Apply the Core Delivery Contract to each subheading:
+- 6.1 Why Generics
+- 6.2 Generic Classes
+- 6.3 Generic Methods
+- 6.4 Bounded Type Parameters
+- 6.5 `?`
+- 6.6 `? extends`
+- 6.7 `? super`
+- 6.8 PECS (Producer Extends, Consumer Super mechanics)
+- 6.9 Generic Collections in Framework Code
+- 6.10 Generic Utility Methods
+- 6.11 Common Generics Interview Questions
+Provide concrete implementation examples of generic base pages and abstract API clients. Output as raw Markdown.
+
+---
+
+### PROMPT 7: SECTION 7 — EXCEPTIONS AND ERROR HANDLING
+Act as an Elite SDET Coach. Write an exhaustive, production-ready guide for "SECTION 7: Exceptions and Error Handling". Every subheading must be processed via the Core Delivery Contract, focusing heavily on custom fault isolation structures:
+- 7.1 Checked Exceptions
+- 7.2 Unchecked Exceptions
+- 7.3 `try` / `catch` / `finally`
+- 7.4 `throw`
+- 7.5 `throws`
+- 7.6 Custom Exceptions
+- 7.7 Exception Chaining
+- 7.8 Multi-Catch
+- 7.9 Try-with-Resources
+- 7.10 Exception Handling in Test Automation
+- 7.11 Framework-Level Exception Strategy
+- 7.12 Bad Exception Handling Patterns
+- 7.13 Common Exception Interview Questions
+Provide full code snippets for an un-swallowed exception strategy in automated pipelines. Output as Markdown.
+
+---
+
+### PROMPT 8: SECTION 8 — JAVA 8+ FEATURES
+Act as a Principal Engineer. Generate deep-dive notes for "SECTION 8: Java 8+ Features" focused on writing declarative, performant test logic. Process all subheadings through the Core Delivery Contract:
+- 8.1 Lambda Expressions
+- 8.2 Functional Interfaces
+- 8.3 `Predicate`
+- 8.4 `Function`
+- 8.5 `Consumer`
+- 8.6 `Supplier`
+- 8.7 `BiFunction` / `BiConsumer` / `BiPredicate`
+- 8.8 Method References
+- 8.9 Stream API
+- 8.10 `map`
+- 8.11 `filter`
+- 8.12 `flatMap`
+- 8.13 `sorted`
+- 8.14 `distinct`
+- 8.15 `limit` / `skip`
+- 8.16 `reduce`
+- 8.17 `collect`
+- 8.18 `groupingBy`
+- 8.19 `partitioningBy`
+- 8.20 `joining`
+- 8.21 Stream vs Loop
+- 8.22 Parallel Streams — Risks (Thread pool contamination)
+- 8.23 Optional
+- 8.24 Date / Time API
+- 8.25 Common Java 8 Coding Questions
+Provide production-grade code for data aggregation and payload filtering using streams. Output as Markdown.
+
+---
+
+### PROMPT 9: SECTION 9 — MULTITHREADING AND CONCURRENCY
+Act as a Core Java Concurrency Expert and Staff SDET. Generate comprehensive notes for "SECTION 9: Multithreading and Concurrency" targeting absolute race safety. Run every item through the Core Delivery Contract:
+- 9.1 Process vs Thread
+- 9.2 Thread Lifecycle
+- 9.3 Creating Threads
+- 9.4 `Runnable`
+- 9.5 `Callable`
+- 9.6 Future
+- 9.7 ExecutorService
+- 9.8 Thread Pools (Fixed vs Cached worker topologies)
+- 9.9 `synchronized`
+- 9.10 Race Conditions
+- 9.11 Deadlock
+- 9.12 Starvation
+- 9.13 Thread Safety
+- 9.14 Immutable Objects
+- 9.15 Concurrent Collections
+- 9.16 Atomic Variables
+- 9.17 ThreadLocal
+- 9.18 Synchronization in Automation Frameworks
+- 9.19 Parallel Test Execution
+- 9.20 Data Isolation in Parallel Tests
+- 9.21 Concurrency Interview Scenarios
+Provide production-grade implementations of ThreadLocal resource isolation patterns. Output as Markdown.
+
+---
+
+### PROMPT 10: SECTION 10 — JAVA CODING AND DSA FOR SDET
+Act as an Advanced Algorithmic Interviewer. Generate deep technical notes for "SECTION 10: Java Coding and DSA for SDET". Every single algorithmic pattern must have a comprehensive complexity analysis, edge-case map, and full clean Java code block. Address all subheadings:
+- 10.1 Problem-Solving Framework
+- 10.2 Arrays
+- 10.3 Strings
+- 10.4 Frequency Counting
+- 10.5 HashMap / HashSet Patterns
+- 10.6 Two Pointers
+- 10.7 Sliding Window
+- 10.8 Prefix Sum
+- 10.9 Stack
+- 10.10 Queue / Deque
+- 10.11 Binary Search
+- 10.12 Linked Lists
+- 10.13 Recursion Basics
+- 10.14 Trees — Basics
+- 10.15 Sorting
+- 10.16 Custom Comparators
+- 10.17 Big-O Analysis
+- 10.18 Space Complexity
+- 10.19 Edge Cases
+- 10.20 Code Review Questions
+- 10.21 SDET-Relevant Coding Problems
+- 10.22 Boss / Interview Variants
+- 10.23 Algorithmic Log Parsing & String Tokenization
+- 10.24 Deep Payload Structural Validation & Nested JSON Diffing
+Include clean, optimized code for nested JSON structural diffing and parallel-safe log parsing engines. Output as Markdown.
+
+---
+
+### PROMPT 11: SECTION 11 — SELENIUM WEBDRIVER ARCHITECTURE
+Act as a Principal Test Architect. Write exhaustive, low-level technical notes for "SECTION 11: Selenium WebDriver Architecture" mapping network communication frames. Apply the Core Delivery Contract to each subheading:
+- 11.1 Selenium Overview
+- 11.2 Selenium Components
+- 11.3 WebDriver Architecture
+- 11.4 W3C WebDriver Protocol (Low-level JSON HTTP payloads)
+- 11.5 BrowserDriver Communication
+- 11.6 ChromeDriver / GeckoDriver / EdgeDriver
+- 11.7 Local Execution
+- 11.8 RemoteWebDriver
+- 11.9 Selenium Grid
+- 11.10 Grid Architecture
+- 11.11 Desired Capabilities / Options
+- 11.12 Browser Context and Session Concepts
+- 11.13 Selenium 4 Features (CDP Integration & BiDi Protocol)
+- 11.14 Common Selenium Architecture Questions
+Provide text/ASCII network tracking loops for session requests. Output as raw Markdown.
+
+---
+
+### PROMPT 12: SECTION 12 — SELENIUM LOCATORS — CODE AND STRATEGY
+Act as an Elite Automation Engineer. Generate highly strategic notes for "SECTION 12: Selenium Locators — Code and Strategy" focused on element stability. Apply the Core Delivery Contract to all items:
+- 12.1 Locator Strategy
+- 12.2 ID
+- 12.3 Name
+- 12.4 Class Name
+- 12.5 Tag Name
+- 12.6 Link Text
+- 12.7 Partial Link Text
+- 12.8 CSS Selectors
+- 12.9 XPath
+- 12.10 Relative XPath
+- 12.11 XPath Axes
+- 12.12 Parent / Child / Ancestor / Descendant
+- 12.13 Following / Preceding
+- 12.14 Text-Based XPath
+- 12.15 Dynamic XPath
+- 12.16 Dynamic Attributes
+- 12.17 CSS vs XPath
+- 12.18 Stable Locator Design
+- 12.19 `data-testid` Strategy
+- 12.20 Locator Code Snippets
+- 12.21 Locator Anti-Patterns
+- 12.22 Locator Interview Questions
+Provide complex production examples of dynamic XPath axes and resilient CSS selector matching strategies. Output as Markdown.
+
+---
+
+### PROMPT 13: SECTION 13 — SELENIUM ELEMENT INTERACTIONS
+Act as a Senior Automation Developer. Write technical notes for "SECTION 13: Selenium Element Interactions" covering DOM interactions. Process all subheadings through the Core Delivery Contract:
+- 13.1 Finding Elements
+- 13.2 `findElement`
+- 13.3 `findElements`
+- 13.4 `click`
+- 13.5 `sendKeys`
+- 13.6 `clear`
+- 13.7 `getText`
+- 13.8 `getAttribute`
+- 13.9 `isDisplayed`
+- 13.10 `isEnabled`
+- 13.11 `isSelected`
+- 13.12 Radio Buttons
+- 13.13 Checkboxes
+- 13.14 Dropdowns with Select
+- 13.15 Custom Dropdowns
+- 13.16 Web Tables
+- 13.17 Dynamic Tables
+- 13.18 Iframes
+- 13.19 Windows / Tabs
+- 13.20 Alerts
+- 13.21 JavaScriptExecutor
+- 13.22 Actions API
+- 13.23 Scroll
+- 13.24 Drag and Drop
+- 13.25 File Upload
+- 13.26 Screenshots
+- 13.27 Common Selenium Interaction Code Snippets
+Provide production-ready Java code for complex multi-window swaps, frame nesting, and virtual shadow DOM inputs. Output as Markdown.
+
+---
+
+### PROMPT 14: SECTION 14 — SELENIUM SYNCHRONIZATION AND WAITS
+Act as a Principal Automation Architect. Generate exhaustive preparation notes for "SECTION 14: Selenium Synchronization and Waits" focused on eliminating flakiness. Run every item through the Core Delivery Contract:
+- 14.1 Why Synchronization Is Needed
+- 14.2 Implicit Wait
+- 14.3 Explicit Wait
+- 14.4 Fluent Wait
+- 14.5 ExpectedConditions
+- 14.6 Visibility
+- 14.7 Presence
+- 14.8 Clickability
+- 14.9 Element State Conditions
+- 14.10 Custom Wait Conditions
+- 14.11 Polling Intervals
+- 14.12 Timeout Strategy
+- 14.13 `Thread.sleep()` — Why to Avoid
+- 14.14 Synchronization in SPAs
+- 14.15 AJAX / Network Timing
+- 14.16 Stale Element Reference
+- 14.17 Synchronization Anti-Patterns
+- 14.18 Wait Code Snippets
+- 14.19 Wait Interview Questions
+Provide full code implementations for customized generic polling fluent waiting utilities. Output as Markdown.
+
+---
+
+### PROMPT 15: SECTION 15 — SELENIUM PAGE OBJECT MODEL AND FRAMEWORK DESIGN
+Act as a Staff Automation Architect. Write a massive, comprehensive guide for "SECTION 15: Selenium Page Object Model and Framework Design". Every subheading must be processed via the Core Delivery Contract, focusing on clean decoupled multi-threaded patterns:
+- 15.1 Page Object Model
+- 15.2 Page Factory — Awareness (Why it is deprecated/anti-pattern in modern architectures)
+- 15.3 BasePage
+- 15.4 Driver Factory
+- 15.5 Driver Manager
+- 15.6 ThreadLocal WebDriver
+- 15.7 Configuration Manager
+- 15.8 Environment Management
+- 15.9 Page Components
+- 15.10 Reusable UI Components
+- 15.11 Utility Layer
+- 15.12 Test Data Layer
+- 15.13 Constants
+- 15.14 Enums
+- 15.15 Logging
+- 15.16 Screenshots on Failure
+- 15.17 Retry Strategy
+- 15.18 Reporting
+- 15.19 Parallel Execution
+- 15.20 Selenium Framework Folder Structure
+- 15.21 End-to-End Framework Code Skeleton
+- 15.22 Framework Design Interview Questions
+- 15.23 Framework Trade-Offs
+- 15.24 Anti-Patterns
+Provide a massive end-to-end multi-threaded code skeleton incorporating thread-safe factories. Output as raw Markdown text.
+
+---
+
+### PROMPT 16: SECTION 16 — SELENIUM ADVANCED SCENARIOS
+Act as a Principal SDET. Generate comprehensive notes for "SECTION 16: Selenium Advanced Scenarios" handling challenging DOM mechanics. Process all subheadings through the Core Delivery Contract:
+- 16.1 Dynamic DOM
+- 16.2 Stale Elements
+- 16.3 Shadow DOM
+- 16.4 Web Components
+- 16.5 Nested Iframes
+- 16.6 Multiple Windows
+- 16.7 Browser Authentication
+- 16.8 Downloads and Uploads
+- 16.9 Browser Notifications
+- 16.10 Permissions
+- 16.11 Headless Execution
+- 16.12 Remote Execution
+- 16.13 Grid Parallelization
+- 16.14 Cross-Browser Execution
+- 16.15 Selenium + API Hybrid Tests
+- 16.16 Selenium Debugging Scenarios
+Provide highly complex Java code examples for interacting with deeply nested Shadow DOM elements. Output as Markdown.
+
+---
+
+### PROMPT 17: SECTION 17 — TESTNG — COMPLETE INTERVIEW SECTION
+Act as an Elite Tech Interview Coach. Generate deeply technical preparation notes for "SECTION 17: TestNG — Complete Interview Section" targeting concurrent test lifecycle hooks. Run every subsection through the Core Delivery Contract:
+- 17.1 Why TestNG
+- 17.2 TestNG Annotations
+- 17.3 `@Test`
+- 17.4 `@BeforeMethod`
+- 17.5 `@AfterMethod`
+- 17.6 `@BeforeClass`
+- 17.7 `@AfterClass`
+- 17.8 `@BeforeTest`
+- 17.9 `@AfterTest`
+- 17.10 `@BeforeSuite`
+- 17.11 `@AfterSuite`
+- 17.12 Annotation Execution Order
+- 17.13 `priority`
+- 17.14 `dependsOnMethods`
+- 17.15 `dependsOnGroups`
+- 17.16 `groups`
+- 17.17 `enabled`
+- 17.18 `timeOut`
+- 17.19 `expectedExceptions`
+- 17.20 `invocationCount`
+- 17.21 `threadPoolSize`
+- 17.22 `alwaysRun`
+- 17.23 Assertions
+- 17.24 Hard vs Soft Assertions
+- 17.25 `@DataProvider`
+- 17.26 DataProvider with Parallel Execution
+- 17.27 `@Parameters`
+- 17.28 XML Parameters
+- 17.29 TestNG Listeners
+- 17.30 `ITestListener`
+- 17.31 `ISuiteListener`
+- 17.32 `IInvokedMethodListener`
+- 17.33 RetryAnalyzer
+- 17.34 TestNG XML
+- 17.35 Parallel Modes
+- 17.36 Thread Safety with TestNG
+- 17.37 Test Context Management
+- 17.38 Reporting Integration
+- 17.39 TestNG Framework Code Snippets
+- 17.40 TestNG Interview Scenarios
+- 17.41 Common TestNG Mistakes
+Provide XML suite examples and listener classes engineered for thread logging. Output as raw Markdown.
+
+---
+
+### PROMPT 18: SECTION 18 — REST ASSURED AND API AUTOMATION
+Act as a Principal API Engineer and Staff SDET. Generate comprehensive notes for "SECTION 18: REST Assured and API Automation" mapping distributed verification tracks. Apply the Core Delivery Contract to all items:
+- 18.1 API Testing Fundamentals
+- 18.2 REST Concepts
+- 18.3 HTTP Methods
+- 18.4 HTTP Status Codes
+- 18.5 Headers
+- 18.6 Query Parameters
+- 18.7 Path Parameters
+- 18.8 Request Body
+- 18.9 Response Body
+- 18.10 Authentication Types
+- 18.11 OAuth / Bearer Tokens
+- 18.12 Cookies
+- 18.13 REST Assured Basics
+- 18.14 Given / When / Then
+- 18.15 RequestSpecification
+- 18.16 ResponseSpecification
+- 18.17 Request Builders
+- 18.18 API Client Pattern
+- 18.19 Response Handling
+- 18.20 POJO Serialization
+- 18.21 POJO Deserialization
+- 18.22 JSONPath
+- 18.23 Schema Validation
+- 18.24 Assertions
+- 18.25 Logging
+- 18.26 Authentication Token Lifecycle
+- 18.27 Config Management
+- 18.28 Environment Switching
+- 18.29 Test Data
+- 18.30 Idempotency
+- 18.31 Retry vs Idempotency
+- 18.32 Thread Safety
+- 18.33 ThreadLocal Test Context
+- 18.34 API + UI Hybrid Testing
+- 18.35 Contract Testing — Awareness
+- 18.36 API Framework Folder Structure
+- 18.37 REST Assured Code Snippets
+- 18.38 REST Assured Interview Questions
+- 18.39 API Debugging Scenarios
+- 18.40 GraphQL Automation (Queries, Mutations, & Structural Schema Validation)
+- 18.41 Event-Driven Systems (Validating Kafka Topics & RabbitMQ Queues asynchronously)
+- 18.42 Sandbox Environments (Microservices Dependency Mocking with WireMock)
+Provide full production-ready code examples for WireMock server configuration and asynchronous Kafka event consumers inside test routines. Output as Markdown.
+
+---
+
+### PROMPT 19: SECTION 19 — PLAYWRIGHT WITH TYPESCRIPT
+Act as a Principal Playwright Architect and TypeScript Expert. Generate exhaustive technical preparation notes for "SECTION 19: Playwright with TypeScript" focusing on event-driven execution protocols. Address all subheadings via the Core Delivery Contract:
+- 19.1 Why Playwright
+- 19.2 Playwright Architecture
+- 19.3 Browser / Context / Page Model
+- 19.4 Projects
+- 19.5 Test Runner
+- 19.6 Fixtures
+- 19.7 Built-In Fixtures
+- 19.8 Custom Fixtures
+- 19.9 Test Isolation
+- 19.10 Locators
+- 19.11 `getByRole`
+- 19.12 `getByLabel`
+- 19.13 `getByPlaceholder`
+- 19.14 `getByTestId`
+- 19.15 `locator`
+- 19.16 Locator Chaining
+- 19.17 Locator Strictness
+- 19.18 Auto-Waiting
+- 19.19 Assertions
+- 19.20 `expect`
+- 19.21 Web-First Assertions
+- 19.22 Navigation
+- 19.23 Tabs / Pages
+- 19.24 Frames
+- 19.25 Dialogs
+- 19.26 File Uploads
+- 19.27 Downloads
+- 19.28 Screenshots
+- 19.29 Traces
+- 19.30 Videos
+- 19.31 Network Interception
+- 19.32 Route Mocking
+- 19.33 APIRequestContext
+- 19.34 API + UI Testing in Playwright
+- 19.35 Authentication State
+- 19.36 Storage State
+- 19.37 Browser Context Isolation
+- 19.38 Parallel Execution
+- 19.39 Workers
+- 19.40 Sharding
+- 19.41 Retries
+- 19.42 Timeouts
+- 19.43 `playwright.config.ts`
+- 19.44 Environment Variables
+- 19.45 Test Data Management
+- 19.46 Dynamic Test Generation
+- 19.47 Page Object Model in TypeScript
+- 19.48 Component Objects
+- 19.49 Fixtures + POM Architecture
+- 19.50 TypeScript Interfaces / Types for Test Data
+- 19.51 Type Safety
+- 19.52 Playwright Folder Structure
+- 19.53 Playwright Code Snippets
+- 19.54 Playwright Debugging
+- 19.55 Playwright vs Selenium
+- 19.56 Playwright Interview Questions
+- 19.57 Common Playwright Anti-Patterns
+Provide clean, functional TypeScript code matching custom fixture architectures and state isolation tracking. Output as raw Markdown.
+
+---
+
+### PROMPT 20: SECTION 20 — TEST AUTOMATION ARCHITECTURE
+Act as a Principal Software Architect. Generate deeply strategic notes for "SECTION 20: Test Automation Architecture" defining corporate scalability matrices. Run all subheadings through the Core Delivery Contract:
+- 20.1 Framework Layers
+- 20.2 Separation of Concerns
+- 20.3 Page Object vs Component Object
+- 20.4 Service / API Client Layer
+- 20.5 Configuration Layer
+- 20.6 Test Data Layer
+- 20.7 Driver / Browser Management
+- 20.8 Dependency Management
+- 20.9 Reusable Utilities
+- 20.10 Logging and Observability
+- 20.11 Reporting
+- 20.12 Failure Diagnostics
+- 20.13 Test Isolation
+- 20.14 Parallel Execution Architecture
+- 20.15 Thread Safety
+- 20.16 Environment Strategy
+- 20.17 Multi-Repository vs Monorepo
+- 20.18 UI + API + DB Validation
+- 20.19 Automation Pyramid
+- 20.20 Shift-Left Testing
+- 20.21 Risk-Based Automation
+- 20.22 Framework Maintainability
+- 20.23 Framework Scalability
+- 20.24 Framework Security
+- 20.25 Architecture Trade-Off Questions
+- 20.26 Secure Integration of GenAI Tools (GitHub Copilot) in Enterprise Testing Workflows
+Include structural ASCII engineering blueprints mapping the layer bounds. Output as Markdown.
+
+---
+
+### PROMPT 21: SECTION 21 — CI/CD FOR SENIOR SDET
+Act as a DevOps Architect and Infrastructure Engineer. Generate an extensive technical guide for "SECTION 21: CI/CD for Senior SDET". Process every subsection via the Core Delivery Contract:
+- 21.1 CI/CD Fundamentals
+- 21.2 Pipeline Stages
+- 21.3 Build vs Test vs Deploy
+- 21.4 Smoke Tests
+- 21.5 Regression Tests
+- 21.6 API Tests in Pipeline
+- 21.7 UI Tests in Pipeline
+- 21.8 Unit vs API vs UI Gates
+- 21.9 Environment Promotion
+- 21.10 Configuration Management
+- 21.11 Secrets Management
+- 21.12 Environment Variables
+- 21.13 Artifact Management
+- 21.14 Test Reports
+- 21.15 Screenshots / Videos / Traces as Artifacts
+- 21.16 Parallel Jobs
+- 21.17 Matrix Builds
+- 21.18 Test Sharding
+- 21.19 Worker Scaling
+- 21.20 Retry Policies
+- 21.21 Flaky Test Handling
+- 21.22 Fail-Fast vs Continue
+- 21.23 Quality Gates
+- 21.24 Branch Strategies
+- 21.25 Pull Request Validation
+- 21.26 Scheduled Regression
+- 21.27 Nightly Suites
+- 21.28 Deployment Validation
+- 21.29 Rollback Validation
+- 21.30 Pipeline Performance Optimization
+- 21.31 CI Observability
+- 21.32 Jenkins
+- 21.33 GitHub Actions
+- 21.34 Azure DevOps — Awareness
+- 21.35 Docker — CI Awareness
+- 21.36 Selenium Grid in CI
+- 21.37 Playwright in CI
+- 21.38 REST Assured in CI
+- 21.39 Pipeline YAML / Jenkinsfile Code Snippets
+- 21.40 CI/CD Interview Scenarios
+- 21.41 Cloud-Native Scale: Test Nodes on AWS ECS Fargate & Kubernetes Pods
+- 21.42 Execution Metrics & Logging Aggregation (ELK Stack & Grafana Loki)
+Provide complete production-ready GitHub Actions YAML or Jenkinsfile script examples managing test sharding and metric routing. Output as Markdown.
+
+---
+
+### PROMPT 22: SECTION 22 — PARALLEL TESTING AND SCALABILITY
+Act as a Lead Systems Architect. Write granular technical preparation notes for "SECTION 22: Parallel Testing and Scalability" targeting race condition elimination. Apply the Core Delivery Contract:
+- 22.1 Why Parallelize
+- 22.2 Test Independence
+- 22.3 Shared State Problems
+- 22.4 Data Collisions
+- 22.5 User Isolation
+- 22.6 Database Contention
+- 22.7 Application Capacity
+- 22.8 Browser Capacity
+- 22.9 Grid Capacity
+- 22.10 Worker Count
+- 22.11 Sharding
+- 22.12 ThreadLocal
+- 22.13 Parallel Test Design
+- 22.14 Measuring Speedup
+- 22.15 Diminishing Returns
+- 22.16 Failure Rate Under Concurrency
+- 22.17 10,000-Test Suite Case Study
+- 22.18 Scaling Interview Questions
+Include practical Java thread management and locking system implementation code blocks. Output as raw Markdown.
+
+---
+
+### PROMPT 23: SECTION 23 — TEST DATA MANAGEMENT
+Act as an Enterprise Data Architect. Write exhaustive preparation notes for "SECTION 23: Test Data Management" focused on safe atomic state mutations. Run each heading through the Core Delivery Contract:
+- 23.1 Static Test Data
+- 23.2 Dynamic Test Data
+- 23.3 Test Data Factories
+- 23.4 Unique Data Generation
+- 23.5 Test User Management
+- 23.6 Data Isolation
+- 23.7 Data Cleanup
+- 23.8 Seed Data
+- 23.9 API-Based Data Setup
+- 23.10 Database-Based Setup
+- 23.11 Parallel-Safe Data
+- 23.12 Environment-Specific Data
+- 23.13 Sensitive Data and Secrets
+- 23.14 Test Data Anti-Patterns
+Provide complete programmatic factory code examples handling atomic transaction generation. Output as Markdown.
+
+---
+
+### PROMPT 24: SECTION 24 — DATABASE / SQL FOR SDET
+Act as a Principal Database Engineer. Generate advanced analytical notes for "SECTION 24: Database / SQL for SDET" covering complex state verification patterns. Process all subheadings through the Core Delivery Contract:
+- 24.1 SQL Fundamentals
+- 24.2 SELECT / WHERE
+- 24.3 ORDER BY
+- 24.4 GROUP BY
+- 24.5 HAVING
+- 24.6 Aggregate Functions
+- 24.7 Joins
+- 24.8 Inner Join
+- 24.9 Left Join
+- 24.10 Right Join — Awareness
+- 24.11 Self Join
+- 24.12 Subqueries
+- 24.13 CTE (Common Table Expressions)
+- 24.14 Window Functions
+- 24.15 `ROW_NUMBER`
+- 24.16 `RANK`
+- 24.17 `DENSE_RANK`
+- 24.18 Transactions
+- 24.19 Commit / Rollback
+- 24.20 Primary Key / Foreign Key
+- 24.21 Indexes — Interview Depth (B-Tree lookups and indexing overhead)
+- 24.22 Database Validation in Automation
+- 24.23 SQL Coding Questions
+Provide production-ready SQL script structures for structural verification matrices and complex window function reports. Output as Markdown.
+
+---
+
+### PROMPT 25: SECTION 25 — API TESTING AND SYSTEM TESTING SCENARIOS
+Act as a Senior Backend Architect. Generate highly technicalNotes for "SECTION 25: API Testing and System Testing Scenarios". Run every single item through the Core Delivery Contract:
+- 25.1 End-to-End API Flow
+- 25.2 Positive / Negative Testing
+- 25.3 Boundary Conditions
+- 25.4 Validation of Business Rules
+- 25.5 Authentication Failures
+- 25.6 Authorization Failures
+- 25.7 Error Contract Validation
+- 25.8 Rate Limiting
+- 25.9 Retry Behavior
+- 25.10 Idempotency
+- 25.11 Eventual Consistency
+- 25.12 Asynchronous Systems
+- 25.13 Message Queues — Awareness
+- 25.14 Database Consistency
+- 25.15 Distributed System Testing — Interview Depth
+Include structural engineering patterns analyzing state alignment errors. Output as Markdown.
+
+---
+
+### PROMPT 26: SECTION 26 — PERFORMANCE / RELIABILITY AWARENESS
+Act as a Performance Engineering Expert. Write comprehensive notes for "SECTION 26: Performance / Reliability Awareness" mapping high-throughput benchmarks. Run each item through the Core Delivery Contract:
+- 26.1 Performance Testing Fundamentals
+- 26.2 Response Time
+- 26.3 Throughput
+- 26.4 Concurrency
+- 26.5 Load vs Stress vs Spike
+- 26.6 Bottleneck Identification
+- 26.7 JMeter Basics
+- 26.8 Correlation
+- 26.9 Parameterization
+- 26.10 Performance Results Interpretation
+- 26.11 Automation Performance
+- 26.12 Suite Runtime Optimization
+- 26.13 Reliability / Resilience Testing — Awareness
+Provide code scripts or configuration xml setups mapping precise metric evaluations. Output as Markdown.
+
+---
+
+### PROMPT 27: SECTION 27 — TESTING STRATEGY AND QA FUNDAMENTALS
+Act as a Principal Director of Quality. Generate comprehensive long-form strategic notes for "SECTION 27: Testing Strategy and QA Fundamentals" matching elite enterprise frameworks. Apply the Core Delivery Contract:
+- 27.1 Test Pyramid
+- 27.2 Test Automation Pyramid
+- 27.3 Shift Left
+- 27.4 Shift Right — Awareness
+- 27.5 Risk-Based Testing
+- 27.6 Regression Strategy
+- 27.7 Smoke Strategy
+- 27.8 Sanity Strategy
+- 27.9 Integration Testing
+- 27.10 System Testing
+- 27.11 End-to-End Testing
+- 27.12 Exploratory Testing
+- 27.13 Defect Lifecycle
+- 27.14 Severity vs Priority
+- 27.15 Root Cause Analysis
+- 27.16 Quality Metrics
+- 27.17 Automation ROI
+- 27.18 What Should NOT Be Automated
+Deliver structural matrices identifying metric calculation formats. Output as clean Markdown.
+
+---
+
+### PROMPT 28: SECTION 28 — DEBUGGING AND FAILURE ANALYSIS
+Act as a Principal Triage Engineer. Write highly rigorous technical notes for "SECTION 28: Debugging and Failure Analysis". Every single item must be processed via the Core Delivery Contract, focusing deeply on root-cause isolation mechanics:
+- 28.1 Test Fails Locally and in CI
+- 28.2 Test Fails Only in CI
+- 28.3 Test Fails Only in Parallel
+- 28.4 Intermittent Failure
+- 28.5 Timeout Failure
+- 28.6 Locator Failure
+- 28.7 Stale Element
+- 28.8 Authentication Failure
+- 28.9 Environment Failure
+- 28.10 Network Failure
+- 28.11 Database Failure
+- 28.12 Dependency Failure
+- 28.13 Test Data Failure
+- 28.14 Browser Compatibility Failure
+- 28.15 Collecting Diagnostic Artifacts
+- 28.16 Root Cause vs Symptom
+- 28.17 When to Retry
+- 28.18 When NOT to Retry
+Provide complete Java code routines managing automatic system state captures and trace gathering. Output as raw Markdown text.
+
+---
+
+### PROMPT 29: SECTION 29 — FLAKY TEST MANAGEMENT
+Act as a Staff Quality Systems Engineer. Write an extensive guide for "SECTION 29: Flaky Test Management" detailing structural system stabilization models. Apply the Core Delivery Contract to each subheading:
+- 29.1 What Is a Flaky Test
+- 29.2 Causes of Flakiness
+- 29.3 Timing Issues
+- 29.4 Shared State
+- 29.5 Unstable Test Data
+- 29.6 Randomness
+- 29.7 External Dependencies
+- 29.8 Parallelism
+- 29.9 Environment Instability
+- 29.10 Detecting Flakiness
+- 29.11 Measuring Flake Rate
+- 29.12 Retry Strategy
+- 29.13 Quarantine Strategy
+- 29.14 Root Cause Fix
+- 29.15 Flaky Test Interview Scenarios
+Include fully detailed algorithmic metrics calculation logic examples. Output as Markdown.
+
+---
+
+### PROMPT 30: SECTION 30 — FRAMEWORK CODE SNIPPET LIBRARY
+Act as a Principal Automation Developer. Write an exhaustive, production-ready master repository codebase block for "SECTION 30: Framework Code Snippet Library". Provide fully complete, non-truncated, robust, syntax-highlighted code structures for every subheading matching peak structural quality:
+- 30.1 Selenium Driver Factory
+- 30.2 ThreadLocal Driver
+- 30.3 Base Test
+- 30.4 Base Page
+- 30.5 Explicit Wait Utility
+- 30.6 Screenshot Utility
+- 30.7 Browser Options
+- 30.8 Window / Frame Handling
+- 30.9 DataProvider
+- 30.10 TestNG Listener
+- 30.11 Retry Analyzer
+- 30.12 Config Reader
+- 30.13 Test Data Reader
+- 30.14 REST Assured Request Specification
+- 30.15 REST Assured API Client
+- 30.16 Authentication Provider
+- 30.17 Response Validation
+- 30.18 Playwright Page Object
+- 30.19 Playwright Fixture
+- 30.20 Playwright Config
+- 30.21 Playwright Authentication State
+- 30.22 Playwright API Client
+- 30.23 CI Pipeline
+- 30.24 SQL Validation Utility
+- 30.25 Logging Utility
+- 30.26 Reporting Utility
+Ensure all code modules integrate seamlessly and display advanced error exception boundaries. Output as Markdown.
+
+---
+
+### PROMPT 31: SECTION 31 — DESIGN PATTERNS FOR TEST AUTOMATION
+Act as a Principal Software Engineer. Write exhaustive architectural design notes for "SECTION 31: Design Patterns for Test Automation". Every single pattern must be processed via the Core Delivery Contract, providing robust implementation code structures:
+- 31.1 Factory Pattern
+- 31.2 Factory Method
+- 31.3 Builder Pattern
+- 31.4 Strategy Pattern
+- 31.5 Singleton — Risks and Appropriate Use
+- 31.6 Facade Pattern
+- 31.7 Adapter Pattern
+- 31.8 Dependency Injection — Concept
+- 31.9 Dependency Inversion
+- 31.10 Patterns in Selenium
+- 31.11 Patterns in REST Assured
+- 31.12 Patterns in Playwright
+- 31.13 Choosing Patterns Without Overengineering
+- 31.14 Object Mother Pattern for Runtime Variable Data Factory Layouts
+Provide complete Java code patterns for the Object Mother runtime generation matrix. Output as clean Markdown text.
+
+---
+
+### PROMPT 32: SECTION 32 — SYSTEM DESIGN FOR SDET
+Act as a Principal Systems Infrastructure Architect. Generate a comprehensive architectural design matrix manual for "SECTION 32: System Design for SDET". Every structural scenario must match large-scale enterprise execution environments and contain data-flow blocks:
+- 32.1 Design a Scalable Automation Framework
+- 32.2 Design a Multi-Browser Test Platform
+- 32.3 Design Parallel Test Execution
+- 32.4 Design Test Data Service
+- 32.5 Design Test Reporting System
+- 32.6 Design CI Test Orchestration
+- 32.7 Design API Automation Framework
+- 32.8 Design UI + API + DB Validation
+- 32.9 Design for 10,000+ Tests
+- 32.10 Failure Isolation
+- 32.11 Observability
+- 32.12 Scalability Trade-Offs
+- 32.13 Security Considerations
+- 32.14 Senior-Level Architecture Questions
+Include full structural planning guides tracking component loads. Output as Markdown.
+
+---
+
+### PROMPT 33: SECTION 33 — BEHAVIORAL AND LEADERSHIP
+Act as an Elite Leadership Interview Coach. Write complete architectural interview response blueprints for "SECTION 33: Behavioral and Leadership" utilizing strict, detailed senior level STAR method matrices. Address all headings:
+- 33.1 Tell Me About Yourself
+- 33.2 Explain Your Current Project
+- 33.3 Biggest Automation Challenge
+- 33.4 Framework You Designed
+- 33.5 Production Defect You Found
+- 33.6 Flaky Test Story
+- 33.7 Conflict With Developer
+- 33.8 Tight Deadline
+- 33.9 Failure / Mistake
+- 33.10 Mentoring
+- 33.11 Technical Decision With Trade-Off
+- 33.12 Improving Team Quality
+- 33.13 Automation ROI Story
+- 33.14 Leadership Without Formal Authority
+- 33.15 Handling Ambiguous Requirements
+- 33.16 Why Deloitte
+- 33.17 Why Change
+- 33.18 Salary / Notice Period Discussion
+Ensure every answer emphasizes scale metrics, cost optimization values, and strategic alignment values. Output as Markdown.
+
+---
+
+### PROMPT 34: SECTION 34 — PROJECT DEEP DIVE
+Act as a Principal SDET Evaluator. Write highly strategic, deep-dive architectural analysis layouts for "SECTION 34: Project Deep Dive". Process all items to establish complete alignment tracking profiles:
+- 34.1 Current / Recent Project Overview
+- 34.2 Application Architecture
+- 34.3 QA Architecture
+- 34.4 Automation Architecture
+- 34.5 Technologies Used
+- 34.6 Responsibilities
+- 34.7 Framework Design Decisions
+- 34.8 Challenging Scenarios
+- 34.9 Defects Found
+- 34.10 Performance / Scale
+- 34.11 CI/CD
+- 34.12 Reporting
+- 34.13 Metrics
+- 34.14 Improvements Delivered
+- 34.15 Trade-Offs
+- 34.16 What You Would Improve Now
+- 34.17 Project Follow-Up Questions
+Include exhaustive validation criteria checking. Output as raw Markdown text.
+
+---
+
+### PROMPT 35: SECTION 35 — RAPID-FIRE INTERVIEW QUESTIONS
+Act as a Senior Technical Lead. Generate a comprehensive checklist repository for "SECTION 35: Rapid-Fire Interview Questions" containing dense, expert-level architectural responses for each topic:
+- 35.1 Java Rapid Fire
+- 35.2 Collections Rapid Fire
+- 35.3 Selenium Rapid Fire
+- 35.4 TestNG Rapid Fire
+- 35.5 REST Assured Rapid Fire
+- 35.6 Playwright Rapid Fire
+- 35.7 CI/CD Rapid Fire
+- 35.8 SQL Rapid Fire
+- 35.9 Automation Framework Rapid Fire
+- 35.10 Senior SDET Scenario Rapid Fire
+Ensure answers focus directly on core execution mechanics. Output as Markdown.
+
+---
+
+### PROMPT 36: SECTION 36 — MOCK INTERVIEW SETS
+Act as a Principal Interviewer panel. Write complete full-scale structural evaluations for "SECTION 36: Mock Interview Sets" detailing senior level questions and complex target evaluations:
+- 36.1 Java + Coding Mock
+- 36.2 Selenium + TestNG Mock
+- 36.3 REST Assured Mock
+- 36.4 Playwright + TypeScript Mock
+- 36.5 Framework Design Mock
+- 36.6 CI/CD Mock
+- 36.7 Debugging Mock
+- 36.8 Senior SDET Scenario Mock
+- 36.9 Project Deep-Dive Mock
+- 36.10 Full Deloitte Mock Interview
+Include sample passing evaluation metrics criteria parameters. Output as Markdown.
+
+---
+
+### PROMPT 37: SECTION 37 — FINAL REVISION SHEETS
+Act as a Staff Architect. Write an ultra-dense master engine review sheet for "SECTION 37: Final Revision Sheets" compressing low-level details into scannable formats:
+- 37.1 One-Page Java Sheet
+- 37.2 One-Page Collections Sheet
+- 37.3 One-Page Selenium Sheet
+- 37.4 One-Page TestNG Sheet
+- 37.5 One-Page REST Assured Sheet
+- 37.6 One-Page Playwright Sheet
+- 37.7 One-Page CI/CD Sheet
+- 37.8 One-Page SQL Sheet
+- 37.9 One-Page Framework Architecture Sheet
+- 37.10 One-Page Senior SDET Scenarios
+- 37.11 Last 24-Hour Revision Checklist
+Output as highly optimized Markdown layout structures.
+
+---
+
+### PROMPT 38: SECTION 38 — PROGRESS TRACKER
+Act as your Personal Interview Planner. Write a clean organizational checklist note for "SECTION 38: Progress Tracker":
+- 38.1 Java
+- 38.2 Advanced Java
+- 38.3 Collections
+- 38.4 DSA / Coding
+- 38.5 Selenium
+- 38.6 TestNG
+- 38.7 REST Assured
+- 38.8 Playwright + TypeScript
+- 38.9 Framework Design
+- 38.10 CI/CD
+- 38.11 SQL
+- 38.12 Debugging
+- 38.13 Behavioral
+- 38.14 Mock Interviews
+Include an organized status verification index table mapping progress. Output as Markdown.

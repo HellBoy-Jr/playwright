@@ -1,0 +1,27 @@
+# SECTION 38 — PROGRESS TRACKER (First Pass)
+
+## Topics Covered
+
+- 38.1-38.14 (14 headers)
+
+*First pass — 2 parallel batch subagents (confidence varies; websearch partial 401, Playwright docs webfetch verified)*
+
+---
+
+## 38.1-38.7 Java/Collections/DSA/Selenium/TestNG/RA
+Java: == vs equals, HashMap internals, threads/daemon, exception hierarchy throw/throws, Abstract vs Interface, Singleton, OOP overload/override, Streams/Lambda/Functional, Builder/Buffer, serialization, heap/stack, equals/hashCode, generics/erasure, volatile. Actions: OOP A a1=new B poly; custom key immutable; try/catch/finally custom demo; 10 Streams; differences table; JVM diagram. Confidence Medium (38.1-38.3 search ok) / Low (38.4-38.7 401 model only).
+Advanced: JDBC drivers Connection/Statement/Prepared/Callable execute/Query/Update batch pooling DriverManager vs DataSource; Servlets lifecycle init/service/destroy Config vs Context Dispatcher forward/include sendRedirect annotations; JSP; Multithreading/Sync Executors CHM. Actions: CRUD Prepared batch; injection/stored proc; HikariCP isolation; Tomcat servlet/filter; flashcards mini project; producer-consumer pool.
+Collections: List/Set/Map/Queue ArrayList vs LinkedList vs ArrayDeque HashMap vs TreeMap vs LinkedHashMap vs Hashtable vs CHM HashSet vs TreeSet fail-fast vs fail-safe Comparable vs Comparator LF 0.75 resize/treeify Java8 null policies iteration safety. Actions: hierarchy diagram; benchmark get/insert; mini-HashMap; table memorize null test; mutable-key fail; CME reproduce 3 fixes; thenComparing/reversed.
+DSA: arrays/strings/HashMap counting two-ptr/sliding/sort/search Big-O stack/queue DP/recursion. Actions: 20 Big-O flashcards; 10 each arrays/strings paper+Java; HashMap patterns; 5 per pattern; from-scratch stack/queue/list; recursive+iterative fib/stairs.
+Selenium: arch locators XPath/CSS waits implicit/explicit/fluent Alert/frames/windows Actions Select screenshot POM grid. Actions: Maven demo lifecycle; 20 locators; wait util Stale; demo page script; switchTo flows; POM scaffold.
+TestNG: annotations lifecycle asserts groups/depends/priority DataProvider parallel listeners reporting XML. Actions: lifecycle order demo; assertion suite; sample XML run; login DDT; parallel report.
+RA: given/when/then methods GET/POST/PUT/DELETE headers/auth query/path JSON ser Hamcrest status/schema chaining. Actions: public API GET JSON path; auth variants; POJO POST deserialize; schema test; reusable spec CRUD chain.
+
+## 38.8-38.14 Playwright/Framework/CI/SQL/Debug/Behavioral/Mocks
+Playwright+TS: `npm init playwright@latest` TS default config/tests scaffold High docs verified; test/project/headed/ui filtering High; TS types/interfaces async/await Locator/Page Medium handbook; web-first locators Role/Text/TestId auto-wait High best-practices; web-first assertions toBeVisible/toHaveText vs isVisible High. Actions: init scaffold run; single-file/project runs; TS Everyday Types POM class; replace XPath Role; fix manual assert anti-pattern.
+Framework: POM class goto/actions readonly Locator ctor High PlaywrightDevPage verified; fixtures/beforeEach isolation browser-contexts storage/cookies High; config projects chromium/ff/webkit timeouts/retries/reporters Medium; data/env staging control route mock 3rd-party secrets High verified; reusability chaining/filtering shared auth setup Medium. Actions: 1 POM login/home; beforeEach login no deps; 3 projects HTML; mock external fulfill; refactor dup fixture/POM.
+CI/CD: GHA playwright.yml checkout setup-node npm ci install --with-deps test upload-artifact High workflow verified; Linux CI shard 1/3 parallel workers High; optimize chromium --with-deps only retention 30d High; HTML show-report trace retry secrets hygiene no creds High; Jenkins/Azure publish static Low Jenkins not fetched. Actions: commit workflow push/PR main; sharding matrix; trim browsers; trace on-first-retry artifact; draft Jenkinsfile 6 steps.
+SQL: SELECT/WHERE/ORDER/LIMIT/DISTINCT/LIKE/IN Low not verified; JOIN INNER/LEFT GROUP+HAVING aggregates Low; INSERT/UPDATE/DELETE txns seed/cleanup Low; QA DB vs UI staging immutability Medium aligns Testing with database note. Actions: 10 queries staging-like; validation order count per user; isolated seed cleanup E2E; DB-check helper framework plan.
+Debug: VSCode breakpoints/highlight/Pick Locator High verified; Inspector `--debug`/file:line/project/pause High; Trace Viewer timeline/DOM/network `--trace on` show-report High; flake auto-wait/actionability DEBUG=pw:api headless false slowMo PWDEBUG console High; lint tsc --noEmit no-floating-promises missing await High verified. Actions: install extension debug 1 fail; repro flake debug pause; trace CI retry open 1; DEBUG pw:api flaky click actionability; ESLint + tsc CI.
+Behavioral Deloitte/Consulting no page verified Low: STAR leadership/teamwork/conflict/failure/delivery; values integrity/collaboration/impact/innovation; consulting ambiguity/stakeholder/deadlines. Actions: 5 STAR bullets metric; 1 story per value; 2-min pitch + ambiguity story; 3 role/team questions.
+Mocks checklist scheduling: Tech1 Playwright+TS live locator/assert/POM Medium scope 38.8/38.9; Tech2 Framework+CI whiteboard+SQL+debug Medium; Behavioral STAR delivery Low; Scorecard correctness/resilience/structure/communication Medium. Actions: 45-min mock record trace/report; bring yml + trace walkthrough; 30-min STAR mock; scorecard fill each.

@@ -1,0 +1,23 @@
+# SECTION 35 — RAPID-FIRE INTERVIEW QUESTIONS (First Pass)
+
+## Topics Covered
+
+- 35.1-35.10 (10 headers)
+
+*First pass — 2 parallel batch subagents*
+
+---
+
+## 35.1-35.5 Java/Collections/Selenium/TestNG/RA
+Java: == refs vs equals content; String immut security/thread/cache/pool; final constant/no-override vs finally cleanup vs finalize GC; abstract state/ctor/single vs interface contract/multiple default/static Java8; overload same-name diff params compile vs override same sig subclass runtime; static class-level shared no object; modifiers private class default package protected package+subclass public global.
+Collections: ArrayList fast random array vs LinkedList fast insert/delete doubly-linked; Hash unordered O1 vs Linked insertion vs Tree sorted Ologn; HashMap unsync null vs Hashtable sync legacy no-null vs CHM thread segmented no-null concurrency best; HashMap buckets hashing list/tree treeify>8 equals/hashCode contract; fail-fast ArrayList/HashMap CME vs fail-safe CHM/COWAL copy; Comparable natural compareTo vs Comparator external compare; Collections sort/synchronized/unmodifiable helpers.
+Selenium: WebDriver native driver executables chromedriver/geckodriver; locators id/name/class/tag/link/partial/css/xpath; absolute root brittle vs relative // robust preferred; close window vs quit session/all; waits implicit global explicit WebDriverWait+EC fluent polling/timeout never sleep; alerts/frames/windows switchTo alert/frame/window handle accept/dismiss back; POM encapsulates locators/actions reusability low maint.
+TestNG: framework annotations grouping parallel data-driven; key @Test @Before/AfterSuite/Test/Class/Method @DataProvider @Parameters @BeforeGroups; prioritize/skip/disable priority dependsOnMethods enabled=false; testng.xml suites/tests/classes/groups/params/parallel; data-driven DataProvider method-data vs Parameters XML; asserts hard Assert stops vs Soft collects needs assertAll; parallel methods/tests/classes thread-count XML.
+RA: Java DSL given-when-then; given setup headers/body/auth → when request get/post/put/delete → then validate status/body; statusCode/body key equalTo Hamcrest/JsonPath; queryParam/pathParam /{id} placeholder; auth basic/oauth2/token header Bearer; ser/deser POJOs Jackson/Gson body(pojo)/as(Class)/jsonPath; schema matchesJsonSchemaInClasspath validator dep.
+
+## 35.6-35.10 Playwright/CI/SQL/Framework/Scenarios
+Playwright MS Node/Py/Java/.NET E2E cross-browser; Chromium/FF/WebKit single API; auto-wait actionability visible/stable/enabled no sleeps; locators strict resilient Role/Text re-resolve DOM each action; tabs/popups context.waitForEvent page/waitForPopup new Page; trace.zip time-travel DOM/network/actions failure; parallel workers fullyParallel+workers config; API request fixture REST setup/teardown E2E+API one flow.
+CI/CD Integration build+test commit Delivery/Deployment auto release envs; stages Checkout→Build→Unit→Deploy Test→API/UI Regression→Report→Promote; Jenkinsfile Pipeline-as-Code versioned repo vs freestyle UI job; trigger PR nightly cron post-deploy smoke full nightly/weekly; failures archive JUnit/Allure unstable Slack/email block promotion critical tags; flaky quarantine separate/retry unstable rerun-failed no block tracking defect; secrets/data vault/env masked params ephemeral Docker/testcontainers per run.
+SQL SELECT cols WHERE rows pre-agg HAVING groups post-GROUP; JOINs INNER match LEFT all-left+match RIGHT all-right FULL both; dups email COUNT GROUP HAVING>1; PK unique row vs FK refs primary integrity; 2nd salary MAX where <MAX; INDEX B-tree lookups cost writes storage; DELETE logged rollback WHERE vs TRUNCATE wipe fast vs DROP table/schema.
+Framework POM locators+actions per page dup cut maint; components Config drivers/factories pages utils data asserts reporting CI; TestNG parallel groups depends DataProvider XML reports favored Selenium/Java vs JUnit; data-driven external Excel/CSV/JSON same script vs keyword action-words steps; waits explicit/fluent EC never sleep centralize timeouts; logs Log4j/SLF4J + Extent/Allure shots/video failure; hybrid POM+data+utils/BDD reusable business-readable scale.
+Scenarios flaky CI first quarantine waits/data isolation/parallel collision retry+trace/shot evidence; 1000 tests 30min risk smoke + parallel shard API over UI stub thirds nightly full; prod escape RCA missing case/env/data regression+contract gate promotion tag; no requirements exploratory charters boundary/negative heuristics prior defects clarify PO/dev; review junior PR locators roles not XPath waits no hardcode AAA reusable fixtures/utils; ROI stable high-freq smoke/regression/API one-off visual/UX manual; API 500 intermittent contract repro request-id/logs idempotency/rate SEV evidence.
