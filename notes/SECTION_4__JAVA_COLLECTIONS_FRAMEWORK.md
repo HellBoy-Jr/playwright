@@ -1,190 +1,324 @@
-# SECTION 4 — JAVA COLLECTIONS FRAMEWORK
+# SECTION 4 — JAVA COLLECTIONS FRAMEWORK (Senior SDET Masterclass)
 
 ## Topics Covered
-
-- 4.1 Collection Hierarchy
-- 4.2 List / Set / Map / Queue / Deque
-- 4.3 ArrayList
-- 4.4 LinkedList
-- 4.5 CopyOnWriteArrayList
-- 4.6 HashSet
-- 4.7 LinkedHashSet
-- 4.8 TreeSet
-- 4.9 HashMap
-- 4.10 LinkedHashMap
-- 4.11 TreeMap
-- 4.12 ConcurrentHashMap
-- 4.13 Queue Implementations
-- 4.14 Deque
-- 4.15 PriorityQueue
-- 4.16 ArrayList vs LinkedList
-- 4.17 HashSet vs LinkedHashSet vs TreeSet
-- 4.18 HashMap vs LinkedHashMap vs TreeMap
-- 4.19 HashMap vs Hashtable vs ConcurrentHashMap
-- 4.20 Collection Selection Scenarios
-- 4.21 Collection Time Complexities
-- 4.22 Collections in Automation Frameworks
-
-*Full-contract, internet-validated 2025-2026*
+- **4.1 Collection Framework Hierarchy & Architecture**
+- **4.2 Core Contracts: List, Set, Map, Queue, and Deque**
+- **4.3 `ArrayList` (Dynamic Resizing, Memory Compaction, & `modCount` Fail-Fast)**
+- **4.4 `LinkedList` (Node Overhead, Cache Locality Traps, & ArrayDeque Contrast)**
+- **4.5 `CopyOnWriteArrayList` (Thread-Safe Listeners & Snapshot Iterators)**
+- **4.6 `HashSet` (Backing HashMap Mechanics & Dummy Value Idioms)**
+- **4.7 `LinkedHashSet` (Preserving Insertion Order in Test Suites)**
+- **4.8 `TreeSet` (Red-Black Tree, `Comparable`, & `Comparator` Constraints)**
+- **4.9 `HashMap` Overview (Core Architecture & High-Concurrency Traps)**
+- **4.10 `LinkedHashMap` (LRU Test Execution Cache Implementation)**
+- **4.11 `TreeMap` (Navigable Map & Range-Based Test Partitioning)**
+- **4.12 `ConcurrentHashMap` (Java 8 CAS + Bucket-Level Synchronization)**
+- **4.13 Queue Implementations (Producer-Consumer Test Data Dispatch)**
+- **4.14 `Deque` & `ArrayDeque` (Ring Buffers vs. Legacy `Stack`)**
+- **4.15 `PriorityQueue` (Binary Heap for Risk-Based Test Scheduling)**
+- **4.16 Structural Comparisons (ArrayList vs. LinkedList)**
+- **4.17 Set Comparisons (HashSet vs. LinkedHashSet vs. TreeSet)**
+- **4.18 Map Comparisons (HashMap vs. LinkedHashMap vs. TreeMap)**
+- **4.19 Concurrency Comparisons (HashMap vs. Hashtable vs. ConcurrentHashMap)**
+- **4.20 Senior Architectural Collection Selection Matrix**
+- **4.21 Time & Space Complexity Master Reference (Big-O)**
+- **4.22 Collections in Test Automation Frameworks (Parallel Triage Playbook)**
 
 ---
 
-## 4.1 Hierarchy — Full
-`Iterable` → `Collection` → `List/Set/Queue`; `Map` separate (K-V not single elements); `Deque extends Queue`; `AbstractList/Set/Map/Queue` skeletons. Code to interfaces: `List<String> t = new ArrayList<>()` swappable. `Collections` (plural) utility, not interface. Map is NOT Collection.
-Enterprise: utilities accept `Collection` for DataProviders/Excel readers.
+## 4.1 Collection Framework Hierarchy & Architecture
 
-## 4.2 Contracts — Full
-List ordered indexed dup OK; Set unique; Map unique keys→values unordered; Queue FIFO `offer/poll/peek`; Deque double-ended LIFO/FIFO.
-```java
-Deque<String> dq = new ArrayDeque<>(); dq.offerLast("t1"); dq.offerFirst("urgent"); dq.pollFirst();
 ```
-Triage: `add` throws full vs `offer` false; `remove` throws vs `poll` null. Use offer/poll in bounded grids. Anti: `Map` as Collection, `Stack` legacy.
-
-## 4.3 ArrayList — Full
-Array, cap 10 grow 1.5x `Arrays.copyOf`, get/set O(1), mid add/remove O(n) shift, not sync, fail-fast.
-```java
-List<String> urls = new ArrayList<>(100); urls.add("/login");
+                                 java.lang.Iterable<T>
+                                          │
+                             java.util.Collection<E>
+                   ┌──────────────────────┼──────────────────────┐
+                   ▼                      ▼                      ▼
+             List<E>                    Set<E>                Queue<E>
+        ┌──────────┴──────────┐     ┌─────┴─────┐                │
+        ▼                     ▼     ▼           ▼                ▼
+    ArrayList             LinkedList HashSet  SortedSet<E>    Deque<E>
+                                    │           │         ┌──────┴──────┐
+                                    ▼           ▼         ▼             ▼
+                            LinkedHashSet    TreeSet  ArrayDeque   LinkedList
+                                                                        
+    ───────────────────────────────────────────────────────────────────────
+    [SEPARATE HIERARCHY]              Map<K, V>
+                       ┌──────────────────┼──────────────────┐
+                       ▼                  ▼                  ▼
+                    HashMap         LinkedHashMap       SortedMap<K, V>
+                       │                                     │
+                       ▼                                     ▼
+              ConcurrentHashMap                           TreeMap
 ```
-Enterprise: `findElements()` results, POI rows, response lists — iteration + random access. Share across parallel → sync/copy.
-Triage CME in for-each remove → `iterator.remove/removeIf`. Cap≠size (`new ArrayList<>(100)` size 0).
 
-## 4.4 LinkedList — Full
-Doubly-linked `List+Deque`, ends O(1), get O(n), node overhead prev/next, null OK, fail-fast. Retry queue, nav history, undo.
-Triage: mid-insert still O(n) traversal w/o positioned Iterator; pure queue/stack → `ArrayDeque` (locality+GC wins).
+### Key Architectural Distinctions Every Senior SDET Must Know
+1. **`Map` is NOT a `Collection`**: `Map<K, V>` does not extend `Collection<E>`. Maps represent key-value pairings (two dimensions), whereas `Collection` represents singular elements. Maps project collection views via `keySet()`, `values()`, and `entrySet()`.
+2. **`Iterable<T>` Contract**: Root of the collection hierarchy. Requires implementing `Iterator<T> iterator()`, enabling enhanced `for-each` loops.
+3. **`Collections` (Utility) vs. `Collection` (Interface)**: `java.util.Collections` is an un-instantiable utility class containing static helper algorithms (`sort`, `synchronizedMap`, `unmodifiableList`).
 
-## 4.5 CopyOnWriteArrayList — Full
-Copy-on-write, lock-free snapshot reads, iterator no CME but no `remove()` + stale post-iterator writes. Read-heavy write-rare (listeners/config flags).
+---
+
+## 4.2 Core Contracts: List, Set, Map, Queue, and Deque
+
+| Interface | Insertion Order | Duplicates Allowed | Primary Access Pattern | Typical SDET Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **`List<E>`** | Preserved (Indexed). | Yes. | Positional index (`get(i)`). | Test execution steps, API JSON payload lists. |
+| **`Set<E>`** | Unordered (except Linked/Tree). | No (Unique). | Membership check (`contains(x)`). | Unique user IDs, deduplicated error logs. |
+| **`Map<K,V>`** | Unordered (except Linked/Tree). | Unique Keys; Duplicate Values. | Key lookup (`get(key)`). | Test context, environment configs, locators. |
+| **`Queue<E>`** | FIFO (First-In, First-Out). | Yes. | Head retrieval (`poll()`, `peek()`). | Parallel test task dispatch, retry queues. |
+| **`Deque<E>`** | Double-ended (FIFO / LIFO). | Yes. | Head/Tail (`pollFirst()`, `pollLast()`). | Browser navigation history, call-stack tracking. |
+
+---
+
+## 4.3 `ArrayList`
+
+### 1. Theory & Resizing Mechanics
+`ArrayList<E>` is backed by a contiguous `Object[] elementData` array.
+- **Initial Capacity**: Default is 10 (allocated lazily upon the first `.add()` invocation).
+- **Growth Formula**: In Java 8+, growth computes as:
+  $$\text{newCapacity} = \text{oldCapacity} + (\text{oldCapacity} \gg 1) \quad (\approx 1.5\times \text{ growth})$$
+- When capacity is exceeded, a new array is allocated and elements are copied using the native CPU-optimized call `System.arraycopy()`.
+- **Fail-Fast Mechanics**: Maintains an internal counter `protected transient int modCount`. If `modCount` changes while an `Iterator` is traversing (structural modification), the iterator immediately throws `ConcurrentModificationException`.
+
 ```java
-CopyOnWriteArrayList<ITestListener> ls = new CopyOnWriteArrayList<>();
-ls.add(new ReportListener()); for (ITestListener l : ls) l.onTestStart(result);
+// Sizing ArrayList defensively in enterprise test parsers
+// AVOID: ArrayList resizing multiple times when loading 10,000 Excel rows
+List<TestRow> rows = new ArrayList<>(10_000); // Pre-allocate initial capacity
 ```
-Triage stale → snapshot; write-heavy logs slow → `ConcurrentLinkedQueue`. Anti: `iterator.remove` (UOE).
 
-## 4.6 HashSet — Full
-`HashMap`-backed `PRESENT` dummy, unordered 1 null, O(1), uniqueness via hash+equals, fail-fast.
+---
+
+## 4.4 `LinkedList`
+
+### 1. Theory & The Memory / Cache Locality Trap
+`LinkedList<E>` is implemented as a doubly-linked list.
+- Each element is wrapped inside a `Node<E>` containing three 64-bit pointers: `item`, `next`, and `prev`.
+- **Memory Inflation**: In a 64-bit JVM, each `Node` object consumes **24 bytes of memory overhead** plus the 8-byte pointer to the object. An `ArrayList` of 100,000 elements consumes $\approx 400\text{KB}$; a `LinkedList` consumes $\approx 3.2\text{MB}$!
+- **CPU Cache Misses**: Elements in an `ArrayList` are contiguous in physical RAM, maximizing CPU L1/L2 prefetching. Nodes in a `LinkedList` are scattered randomly across the heap, causing CPU cache misses on every traversal.
+
+> [!TIP]
+> **Senior Architecture Rule**: Almost never use `LinkedList` in modern Java. If you need a Queue or Stack, use `ArrayDeque`. If you need a List, use `ArrayList`.
+
+---
+
+## 4.5 `CopyOnWriteArrayList`
+
+### 1. Theory & Concurrency Mechanics
+`CopyOnWriteArrayList<E>` is a thread-safe variant of `ArrayList` located in `java.util.concurrent`.
+- **Write Operation**: Every mutating operation (`add()`, `set()`, `remove()`) creates a brand-new underlying array copy using an internal `ReentrantLock`.
+- **Read Operation**: Read operations (`get()`, `iterator()`) are completely lock-free and operate on a snapshot array at the moment the iterator was created.
+- **Fail-Safe Iterators**: Iterators **never throw `ConcurrentModificationException`** and do not reflect subsequent writes. Mutating methods on the iterator (`it.remove()`) throw `UnsupportedOperationException`.
+
+### 2. Production Code: Thread-Safe Test Lifecycle Event Broadcaster
 ```java
-Set<String> ids = new HashSet<>(); ids.add("TC-01"); ids.add("TC-01"); // size 1
+package com.deloitte.sdet.listeners;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public final class TestEventDispatcher {
+
+    // Thread-safe listener registration list. Read-heavy, write-rare.
+    private final List<TestLifecycleListener> listeners = new CopyOnWriteArrayList<>();
+
+    public void registerListener(TestLifecycleListener listener) {
+        listeners.add(listener);
+    }
+
+    public void broadcastTestPassed(String testId) {
+        // Safe lock-free iteration across 50 parallel execution threads
+        for (TestLifecycleListener listener : listeners) {
+            listener.onPass(testId);
+        }
+    }
+
+    public interface TestLifecycleListener { void onPass(String testId); }
+}
 ```
-Enterprise dedup: failed IDs, visited URLs, Cucumber tags. Mutating hash field after add → unfindable + dup. Use immutable keys.
 
-## 4.7 LinkedHashSet — Full
-`HashSet` + insertion-order linked list, O(1), 1 null, extra mem. Deterministic tags/rerun files/Excel dedup preserving order (fixes HashSet flaky asserts).
-Re-add doesn’t move pos; insertion not sorted (→ TreeSet). 
+---
 
-## 4.8 TreeSet — Full
-`TreeMap` Red-Black `NavigableSet`, sorted natural/Comparator, O(log n), no null natural (NPE), `first/last/headSet/tailSet`.
+## 4.6 `HashSet`, 4.7 `LinkedHashSet`, and 4.8 `TreeSet`
+
+```
+┌─────────────────┬──────────────────┬──────────────┬───────────────┬───────────────────────────┐
+│ Set Type        │ Backing Structure│ Ordering     │ `contains()`  │ Special Requirements      │
+├─────────────────┼──────────────────┼──────────────┼───────────────┼───────────────────────────┤
+│ `HashSet`       │ `HashMap`        │ None         │ $O(1)$ avg    │ `equals()` & `hashCode()` │
+│ `LinkedHashSet` │ `LinkedHashMap`  │ Insertion    │ $O(1)$ avg    │ `equals()` & `hashCode()` │
+│ `TreeSet`       │ `TreeMap` (RB)   │ Sorted Order │ $O(\log N)$   │ `Comparable`/`Comparator` │
+└─────────────────┴──────────────────┴──────────────┴───────────────┴───────────────────────────┘
+```
+
+### The `HashSet` Internal Secret
+`HashSet` does NOT implement hashing from scratch. It delegates completely to a private `HashMap`:
 ```java
-TreeSet<Integer> ms = new TreeSet<>(Comparator.reverseOrder()); ms.addAll(List.of(200,100,500));
-```
-Mixed types → CCE; `compareTo==0` vs `equals` inconsistent drops distincts. Sorted SLAs/timestamps/dropdowns.
+// OpenJDK HashSet implementation detail
+private transient HashMap<E,Object> map;
+private static final Object PRESENT = new Object(); // Dummy constant
 
-## 4.9 HashMap — Full
-Buckets+list/tree (treeify ≥8), O(1) good hash, 1 null key + multi null values, unordered, fail-fast, LF 0.75. Java 8 tree resists DoS.
+public boolean add(E e) {
+    return map.put(e, PRESENT) == null;
+}
+```
+
+---
+
+## 4.10 `LinkedHashMap` (LRU Test Execution Cache)
+
+`LinkedHashMap` maintains a doubly-linked list running through all of its entries.
+By overriding `removeEldestEntry()`, you can construct an automated **Least-Recently-Used (LRU) Cache** in 10 lines of code.
+
+### Production Code: LRU Browser Session / Token Cache
 ```java
-Map<String,String> d = new HashMap<>(); d.put("user","admin"); d.getOrDefault("env","qa");
-```
-Bad hash/equals → dup keys/miss; concurrent resize pre-8 loop / post-8 loss → parallel flake. Never share; use CHM/ThreadLocal.
+package com.deloitte.sdet.cache;
 
-## 4.10 LinkedHashMap — Full
-`HashMap` + insertion-order list, optional access-order LRU (`(16,0.75f,true)` + `removeEldestEntry`). O(1), nulls OK.
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class LruTestTokenCache extends LinkedHashMap<String, String> {
+
+    private final int maxEntries;
+
+    public LruTestTokenCache(int maxEntries) {
+        // accessOrder = true: ordered by access frequency, not insertion order
+        super(maxEntries, 0.75f, true);
+        this.maxEntries = maxEntries;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
+        // Automatically evicts the least recently accessed token when limit exceeded
+        return size() > maxEntries;
+    }
+}
+```
+
+---
+
+## 4.12 `ConcurrentHashMap`
+
+In multi-threaded test frameworks running across 16–32 parallel workers:
+- **`HashMap`**: Non-thread-safe. Multiple writers corrupt table pointers or cause lost updates.
+- **`Hashtable` / `Collections.synchronizedMap()`**: Coarse-grained locking. A single monitor lock blocks ALL reading and writing threads, serializing parallel test execution.
+- **`ConcurrentHashMap` (Java 8+)**:
+  - **Reads**: 100% lock-free via `volatile` reads.
+  - **Writes to Empty Buckets**: Lock-free using CPU hardware **CAS (`Compare-And-Swap`)**.
+  - **Writes to Populated Buckets**: Locks ONLY the **head node of that specific bucket** using a fine-grained `synchronized` block. Multiple threads can write concurrently to different buckets.
+
+---
+
+## 4.13 Queue & 4.14 `ArrayDeque`
+
+```
+┌──────────────────┬───────────────────┬─────────────────────────────────────────┐
+│ Method Function  │ Throws Exception  │ Returns Special Value (`false` / `null`)│
+├──────────────────┼───────────────────┼─────────────────────────────────────────┤
+│ Insert at Tail   │ `add(e)`          │ `offer(e)`                              │
+│ Remove from Head │ `remove()`        │ `poll()`                                │
+│ Examine Head     │ `element()`       │ `peek()`                                │
+└──────────────────┴───────────────────┴─────────────────────────────────────────┘
+```
+
+> [!WARNING]
+> Always use `offer()` and `poll()` in test framework queues. `add()` throws an unchecked `IllegalStateException` when a bounded queue is full; `remove()` throws `NoSuchElementException` when empty.
+
+---
+
+## 4.15 `PriorityQueue` (Risk-Based Test Scheduling)
+
+`PriorityQueue<E>` is an unbounded priority heap backed by a dynamic array representing a **binary min-heap**:
+- Root element is always the minimum element according to natural ordering or custom `Comparator`.
+- Time complexity: $O(\log N)$ for `offer()` and `poll()`; $O(1)$ for `peek()`.
+
+### Production Code: Executing Critical Flaky Tests First
 ```java
-Map<String,String> lru = new LinkedHashMap<>(16,0.75f,true){
-  @Override protected boolean removeEldestEntry(Map.Entry e) { return size() > 2; }};
+package com.deloitte.sdet.scheduler;
+
+import java.util.PriorityQueue;
+
+public record TestCase(String testId, int riskPriority) implements Comparable<TestCase> {
+    @Override
+    public int compareTo(TestCase other) {
+        // Priority 1 executes before Priority 2
+        return Integer.compare(this.riskPriority, other.riskPriority);
+    }
+}
+
+public class TestScheduler {
+    public static void main(String[] args) {
+        PriorityQueue<TestCase> queue = new PriorityQueue<>();
+        queue.offer(new TestCase("TC-300", 3)); // Low priority
+        queue.offer(new TestCase("TC-101", 1)); // Blocker/P1
+        queue.offer(new TestCase("TC-202", 2)); // Major
+
+        while (!queue.isEmpty()) {
+            System.out.println("Executing: " + queue.poll().testId());
+        }
+        // Output: TC-101, then TC-202, then TC-300
+    }
+}
 ```
-Deterministic payload/signature/ordered forms/Allure logs; token/response cache. Flag `true` required or insertion-order only.
 
-## 4.11 TreeMap — Full
-RB-tree `NavigableMap` sorted key, O(log n), no null key natural, null values OK, `first/last/ceiling/floor/headMap/tailMap`.
-```java
-TreeMap<String,Integer> runs = new TreeMap<>(); runs.put("2026-10-06",5);
+---
+
+## 4.20 Senior Architectural Collection Selection Matrix
+
 ```
-Uses `compareTo` not `equals/hashCode` → inconsistent comparator breaks `containsKey`. Mutating ordering field corrupts tree. Deterministic compliance dashboards.
-
-## 4.12 ConcurrentHashMap — Full
-CAS+bin-lock (Java 8+; 7 segments), lock-free reads, bin-only writes, treeified, no nulls, weakly-consistent iter, atomic `compute/merge/putIfAbsent`.
-```java
-ConcurrentHashMap<String,Integer> rc = new ConcurrentHashMap<>();
-rc.merge("TC01", 1, Integer::sum); rc.computeIfAbsent("token", k -> login());
+┌────────────────────────────────────────────────────────────────────────┐
+│             SDET ARCHITECTURAL COLLECTION DECISION FLOW                │
+├────────────────────────────────────────────────────────────────────────┤
+│ 1. Do you need Key-Value mapping?                                      │
+│    ├─ YES: Need thread-safety across parallel runners?                 │
+│    │       ├─ YES ──► ConcurrentHashMap                                │
+│    │       └─ NO  ──► Need insertion order preserved?                  │
+│    │                  ├─ YES ──► LinkedHashMap                         │
+│    │                  └─ NO  ──► HashMap                               │
+│    │                                                                   │
+│ 2. Do you require Unique Elements only (no duplicates)?                │
+│    ├─ YES: Need sorted order?                                          │
+│    │       ├─ YES ──► TreeSet                                          │
+│    │       └─ NO  ──► Need insertion order preserved?                  │
+│    │                  ├─ YES ──► LinkedHashSet                         │
+│    │                  └─ NO  ──► HashSet                               │
+│    │                                                                   │
+│ 3. Do you need an Indexed, Ordered List?                               │
+│    ├─ YES: Thread-safe listener / read-heavy snapshot list?            │
+│    │       ├─ YES ──► CopyOnWriteArrayList                             │
+│    │       └─ NO  ──► ArrayList (default standard)                     │
+│    │                                                                   │
+│ 4. Do you need Queue / Stack operations?                               │
+│    ├─ Multi-threaded Producer-Consumer task handoff ──► BlockingQueue  │
+│    └─ Single-threaded LIFO / FIFO buffer            ──► ArrayDeque     │
+└────────────────────────────────────────────────────────────────────────┘
 ```
-Enterprise parallel results/counters/token cache over `synchronizedMap` (whole-lock). `size/isEmpty` estimates; `contains+put` racy → atomic. Null banned (absent vs null ambiguity).
 
-## 4.13 Queues — Full
-`LinkedList` null OK unsync; `ArrayBlocking` bounded locks; `LinkedBlocking` opt-bounded throughput; `ConcurrentLinked` lock-free unbounded; `PriorityBlocking` ordered; `Synchronous` handoff.
-```java
-BlockingQueue<String> q = new ArrayBlockingQueue<>(100);
-q.offer("https://app/login"); String u = q.poll(5, TimeUnit.SECONDS);
-```
-Producer-consumer URLs/data, throttle Grid to avoid OOM. add/put/offer + remove/poll/take semantics differ — mixing causes flaky waits. Never LinkedList parallel.
+---
 
-## 4.14 Deque — Full
-Double-ended: `ArrayDeque` circular array O(1) both, no null unsync; `ConcurrentLinkedDeque` thread-safe; `LinkedList` node-based slower. Replaces `Stack` (Vector sync).
-```java
-Deque<String> st = new ArrayDeque<>(); st.push("w1"); st.push("w2"); String t = st.pop();
-```
-Back/forward history, undo, palindrome/window, BFS/DFS. `push=addFirst`, `pop` throws vs `pollFirst` null.
+## 4.21 Time & Space Complexity Master Reference (Big-O)
 
-## 4.15 PriorityQueue — Full
-Heap least-head, array sift, natural/Comparator, no nulls unsync (`PriorityBlocking` thread-safe), `offer/poll O(log n)`, `peek O(1)`, `remove/contains O(n)`. Iterator NOT sorted.
-```java
-PriorityQueue<TestCase> pq = new PriorityQueue<>(Comparator.comparingInt(t -> t.priority));
-pq.offer(new TestCase("P0",0)); pq.poll(); // least
-```
-P0-before-P2, retry most-failed, SLA scheduling. Must poll repeatedly for sorted; non-Comparable w/o Comparator → CCE.
+| Collection | `get()` / `search` | `add()` / `insert` | `remove()` | Space Complexity |
+| :--- | :--- | :--- | :--- | :--- |
+| **`ArrayList`** | $O(1)$ by index; $O(N)$ by value | $O(1)$ amortized; $O(N)$ worst | $O(N)$ (requires array shift) | $O(N)$ contiguous |
+| **`LinkedList`** | $O(N)$ | $O(1)$ at head/tail; $O(N)$ middle | $O(1)$ at head/tail; $O(N)$ middle | $O(N)$ with 24B/node |
+| **`ArrayDeque`** | $O(1)$ at head/tail | $O(1)$ amortized | $O(1)$ at head/tail | $O(N)$ ring buffer |
+| **`HashSet`** | $O(1)$ average; $O(N)$ worst | $O(1)$ average; $O(N)$ worst | $O(1)$ average; $O(N)$ worst | $O(N)$ |
+| **`TreeSet`** | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ Red-Black tree |
+| **`HashMap`** | $O(1)$ average; $O(\log N)$ modern | $O(1)$ average; $O(\log N)$ modern | $O(1)$ average; $O(\log N)$ modern | $O(N)$ |
+| **`TreeMap`** | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ Red-Black tree |
+| **`ConcurrentHashMap`**| $O(1)$ average | $O(1)$ average | $O(1)$ average | $O(N)$ |
 
-## 4.16 ArrayList vs LinkedList — Full
-Both `List`. Array: indexed O(1), mid O(n); Linked nodes+Queue/Deque: ends O(1), indexed O(n), higher mem.
-Default ArrayList (DataProviders, WebElements, CSV — iteration+get). Linked only frequent head ops. Cache locality wins.
-```java
-List<String> ids = new ArrayList<>(1000); Deque<String> dq = new LinkedList<>(); dq.addFirst("latest");
-```
-Remove in for-each → CME → `iterator.remove/removeIf`. LinkedList almost never beats ArrayDeque for queue/stack.
+---
 
-## 4.17 Sets — Full
-| | Order | Ops |
-|---|---|---|
-| Hash | none | O(1) |
-| Linked | insertion | O(1) |
-| Tree | sorted | O(log n) |
-Dedup IDs/URLs/defects; Linked preserves Excel/CSV order; Tree sorted reports/range. Mutable elems break hash; Tree inconsistent compareTo drops; Hash rehash changes order.
+## 4.22 High-Stakes Concurrency Scenarios in Test Frameworks
 
-## 4.18 Maps — Full
-| | Order | Ops |
-|---|---|---|
-| Hash | none | O(1) |
-| Linked | insertion/access LRU | O(1) |
-| Tree | sorted | O(log n) |
-Config/test-data Hash; deterministic JSON/order Linked; sorted dashboards/range Tree. Hash JSON order assert flaky → Linked/Jackson ORDER; Tree keys comparable else CCE; none thread-safe.
+### Scenario 1: `ConcurrentModificationException` during Parallel Reporting
+- **Symptom**: Test execution passes, but the TestNG/ExtentReport listener fails with `java.util.ConcurrentModificationException` during `@AfterSuite`.
+- **Root Cause**: The custom reporter uses a standard `ArrayList<TestResult>`. As 16 worker threads finish tests and call `list.add()`, a background reporting thread traverses the list via `for (TestResult r : list)`, detecting a mismatched `modCount`.
+- **Senior Resolution**: Replace `ArrayList` with `ConcurrentLinkedQueue<TestResult>` or `CopyOnWriteArrayList<TestResult>`.
 
-## 4.19 HashMap vs Hashtable vs CHM — Full
-| | Lock | Nulls |
-|---|---|---|
-| HashMap | none, fastest single | yes |
-| Hashtable | table-wide legacy | no |
-| CHM | bin-level modern | no |
-Parallel driver/token/counts → CHM; Hashtable legacy/interview only; local vars Hash. `synchronizedMap` still needs ext sync iteration; CHM get+put still racy → atomic. Hashtable Enumeration vs Hash fail-fast.
-
-## 4.20 Selection — Full
-Uniqueness→Set, K-V→Map, FIFO→Queue, LIFO→Deque stack, sorted→Tree, ordered→Linked, concurrent→concurrent/Blocking. Null/order/safety/bounded.
-Cheat: DataProvider `ArrayList<Object[]>`; defect IDs `HashSet`; env `HashMap`; ordered payload `LinkedHashMap`; parallel queue `ArrayBlockingQueue`; shared `CHM`; priority `PQ`; stack `ArrayDeque`.
-```java
-Queue<Runnable> work = new LinkedBlockingQueue<>(50);
-Set<String> seen = ConcurrentHashMap.newKeySet();
-```
-Default ArrayList/HashMap parallel → CME/lost updates; Tree overuse O(log n)+comparator bugs; unbounded queue deadlock Grid.
-
-## 4.21 Complexities — Full
-Hash O(1) avg (bad hash degrades), worst O(n)→O(log n) treeified; Tree O(log n); ArrayList get O(1) mid O(n); Linked get O(n) ends O(1); PQ offer/poll O(log n) contains O(n); CHM O(1)/tree O(log n).
-10k API/DB-vs-UI diff: `HashSet` O(1) beats nested O(n²). Sort+binary only if repeated queries justify O(n log n).
-```java
-Set<String> db = new HashSet<>(fetchDbIds()); for (String ui : uiIds) Assert.assertTrue(db.contains(ui));
-```
-Qualify “average” + hash quality; `List.contains` O(n) slow-framework cause.
-
-## 4.22 Frameworks — Full
-`TestNG @DataProvider Object[][]` from `List<Map<String,String>>` Excel/CSV/DB; Page caches `List<WebElement>`; RestAssured `Map→JSON`; listeners `CHM<String,Status>`; retry `Set` dedup.
-```java
-@DataProvider(parallel = true) public Object[][] dp() { return data.stream().map(m -> new Object[]{m}).toArray(Object[][]::new); }
-ConcurrentHashMap<String,String> results = new ConcurrentHashMap<>();
-```
-POI→LinkedHashMap (column order)→ArrayList→DP→dedup LinkedHashSet→parallel BlockingQueue+CHM→sorted TreeMap report.
-Traps: sharing ArrayList/HashMap parallel corrupts; storing WebElements across nav → Stale → re-find or store `Map<String,By>`.
+### Scenario 2: Deadlock with `Collections.synchronizedMap()`
+- **Symptom**: Test runner hangs indefinitely on 8 parallel threads during token refresh.
+- **Root Cause**: Two different threads locked the same synchronized map while executing nested operations requiring another monitor lock in reverse order.
+- **Senior Resolution**: Replace `Collections.synchronizedMap` with `ConcurrentHashMap` and utilize atomic compute methods (`computeIfAbsent`, `merge`) instead of compound `if (!map.containsKey(k)) map.put(k, v)` blocks.

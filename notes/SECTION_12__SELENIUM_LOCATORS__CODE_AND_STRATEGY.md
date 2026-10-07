@@ -1,219 +1,242 @@
-# SECTION 12 — SELENIUM LOCATORS — CODE AND STRATEGY (Refined)
+# SECTION 12 — SELENIUM LOCATORS: CODE AND STRATEGY (Senior SDET Masterclass)
 
 ## Topics Covered
-
-- 12.1 Locator Strategy
-- 12.2 ID
-- 12.3 Name
-- 12.4 Class Name
-- 12.5 Tag Name
-- 12.6 Link Text
-- 12.7 Partial Link Text
-- 12.8 CSS Selectors
-- 12.9 XPath
-- 12.10 Relative XPath
-- 12.11 XPath Axes
-- 12.12 Parent / Child / Ancestor / Descendant
-- 12.13 Following / Preceding
-- 12.14 Text-Based XPath
-- 12.15 Dynamic XPath
-- 12.16 Dynamic Attributes
-- 12.17 CSS vs XPath
-- 12.18 Stable Locator Design
-- 12.19 `data-testid` Strategy
-- 12.20 Locator Code Snippets
-- 12.21 Locator Anti-Patterns
-- 12.22 Locator Interview Questions
-
-*Refined header-by-header — full contract (web search API 401, validated from prior 2025-2026 pass)*
+- **12.1 Enterprise Locator Hierarchy & Selection Strategy**
+- **12.2 ID & Name Locators (Unique Identifiers & Form Submissions)**
+- **12.3 Class Name & Tag Name (Compound Class Traps & Collections)**
+- **12.4 Link Text & Partial Link Text (Internationalization Hazards)**
+- **12.5 CSS Selectors Deep Dive (Substrings, Sibling Combinators, & Pseudo-Classes)**
+- **12.6 XPath Engine Architecture (W3C DOM Pathing & Traversal Cost)**
+- **12.7 Absolute vs. Relative XPath (Why `/html/body/...` Kills Frameworks)**
+- **12.8 XPath Axes Masterclass (`ancestor`, `descendant`, `following-sibling`, `preceding-sibling`)**
+- **12.9 Text-Based XPath (`text()`, `normalize-space()`, & `contains()`)**
+- **12.10 Dynamic XPath for Data Grids & Complex Tables**
+- **12.11 Handling Dynamic DOM Attributes (Guids, Auto-Generated IDs, & Regex)**
+- **12.12 Comprehensive Engine Comparison: CSS Selectors vs. XPath**
+- **12.13 Resilient Locator Design (The "Self-Defending" Locator Contract)**
+- **12.14 Enterprise `data-testid` Strategy & Frontend Governance**
+- **12.15 Production-Ready Code: Dynamic Table Row Action Resolver**
+- **12.16 Top 8 Locator Anti-Patterns in Flaky Test Suites**
+- **12.17 High-Stakes Senior Locator Interview Questions & Spoken Solutions**
 
 ---
 
-## 12.1 Locator Strategy — Refined
-Theory: 8 strategies + Relative. Priority unique id > name/CSS/data-testid > XPath last. POM-centralized, never absolute.
-Enterprise 5000+: stable attrs cut flake 80%; review/lint + `1/1` uniqueness + strict single-match.
-```java
-private final By loginBtn = By.cssSelector("[data-testid='login']");
-wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).click();
-```
-Triage: post-deploy NoSuch → structure/class/auto-ID tied; fix stable parent + partial/text/axes. Anti: absolute XPath, index chains, locators in @Test. Qs: priority + proof?
+## 12.1 Enterprise Locator Hierarchy & Selection Strategy
 
-## 12.2 ID — Refined
-Theory: `By.id()` unique, fastest getElementById. Stable only; dynamic `ext-123` fails.
-Enterprise: stable IDs + testid contract; `1/1` check.
-```java
-wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("lname")));
-```
-Triage: yesterday-pass today-fail → dynamic; switch partial/text. Anti: assume unique/stable. Qs: why fastest? detect dynamic?
+In a 5,000+ test enterprise suite, locator stability is the single biggest factor determining whether CI maintenance takes 10 minutes or 4 hours a day.
 
-## 12.3 Name — Refined
-Theory: `By.name()` forms; less unique (radios share) → findElements + value filter.
-Enterprise: `form#login [name='email']` precision.
-```java
-driver.findElements(By.name("gender")).stream()
-  .filter(r -> r.getAttribute("value").equals("male")).findFirst().orElseThrow().click();
 ```
-Triage: first-only wrong → scope parent. Anti: single-assume. Qs: radio handling?
-
-## 12.4 Class Name — Refined
-Theory: `By.className()` groups → findElements. One token; compound → CSS `.btn.btn-primary`.
-Enterprise: lists/cards; styling churn → testid/role.
-```java
-driver.findElements(By.className("information"));
+┌────────────────────────────────────────────────────────────────────────┐
+│                   SENIOR SDET LOCATOR PRIORITY HIERARCHY               │
+├─────────────────┬──────────────────────────────────────────────────────┤
+│ 1. Dedicated QA │ `[data-testid='submit-btn']`, `[data-cy='checkout']` │
+│    Attributes   │ Immune to CSS redesigns and DOM layout restructuring │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ 2. Semantic ID  │ `By.id("user-email")` (Verify ID is not auto-gen)    │
+│    or Name      │ Fast native browser execution via `getElementById`   │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ 3. Resilient    │ `button.btn-primary[type='submit']`                  │
+│    CSS Selector │ Native, fast, clean syntax; penetrates Shadow DOM    │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ 4. Relative     │ `//tr[td[text()='INV-101']]//button[text()='Pay']`   │
+│    Axes XPath   │ Essential for bidirectional traversal and data grids │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ ❌ ABSOLUTE     │ `/html/body/div[2]/div[1]/table/tbody/tr[3]/td[2]`   │
+│    XPATH (BANNED│ Extremely brittle; breaks on any cosmetic DOM change │
+└─────────────────┴──────────────────────────────────────────────────────┘
 ```
-Triage: compound error → CSS; redesign fail → stable attr. Anti: compound, styling-as-functional.
 
-## 12.5 Tag Name — Refined
-Theory: `By.tagName()` rarely unique; count/scope links/rows/inputs + parent scope.
-Enterprise: link health, row counts.
-```java
-WebElement table = driver.findElement(By.id("emp"));
-List<WebElement> rows = table.findElements(By.tagName("tr"));
+---
+
+## 12.5 CSS Selectors Deep Dive
+
+CSS selectors execute natively inside the browser engine using the C++ method `document.querySelectorAll()`.
+
+### Attribute Matching Combinators
+- **Exact Match**: `[data-testid='login-button']`
+- **Prefix Match (`^=`)**: `[id^='session_']` (Matches IDs starting with `session_`)
+- **Suffix Match (`$=`)**: `[href$='.pdf']` (Matches links ending with `.pdf`)
+- **Substring Contains (`*=`)**: `[class*='active-user']` (Matches any class containing `active-user`)
+- **Whitespace-Separated Word (`~=`)**: `[class~='btn']` (Matches exact word `btn`)
+
+### Structural & Relational Pseudo-Classes
+- **Direct Child (`>`)**: `div.card > button` (Only immediate children)
+- **Descendant (Space)**: `div.card button` (Any nested button at any depth)
+- **Adjacent Sibling (`+`)**: `label + input` (The immediate next sibling input)
+- **General Sibling (`~`)**: `h2 ~ p` (Any sibling paragraph following an h2)
+- **Nth-Child**: `tr:nth-child(even)` or `ul > li:first-child`
+- **Negation (`:not()`)**: `button:not([disabled])` (Selects only clickable buttons)
+
+---
+
+## 12.8 XPath Axes Masterclass
+
+XPath (XML Path Language) views the HTML DOM as a tree of nodes. While CSS can only traverse **downwards** or to **subsequent siblings**, XPath can traverse in **all directions** (upwards to parents/ancestors, downwards, and backwards to preceding siblings).
+
 ```
-Triage: huge slow → scope; hidden included → filter. Anti: bare global div.
-
-## 12.6 Link Text — Refined
-Theory: `By.linkText()` exact `<a>` text, readable, case/space sensitive, stable unique only.
-Enterprise: nav smoke; i18n → testid.
-```java
-driver.findElement(By.linkText("Selenium Official Page")).click();
+                             ancestor::div
+                                   ▲
+                                   │
+                              parent::tr
+                                   ▲
+                                   │
+preceding-sibling::td ◄─── [Context Node] ───► following-sibling::td
+                                   │
+                                   ▼
+                              child::span
+                                   │
+                                   ▼
+                            descendant::svg
 ```
-Triage: slight change → partial/CSS. Anti: dynamic/long exact.
 
-## 12.7 Partial Link Text — Refined
-Theory: `By.partialLinkText()` substring; long/dynamic links; multi-match → first only → findElements.
-Enterprise: prefix/suffix changing links.
-```java
-driver.findElements(By.partialLinkText("Official")).stream()
-  .filter(e -> e.getText().contains("Selenium")).findFirst().orElseThrow().click();
-```
-Triage: short substring multi → lengthen + scope. Anti: overly short substrings.
+### The 6 Essential XPath Axes for Complex UI Automation
+1. **`parent::*`**: Selects the immediate parent node (`..`).
+2. **`ancestor::*`**: Selects all parent, grandparent, and root ancestor nodes.
+3. **`following-sibling::*`**: Selects all sibling nodes that appear *after* the context node under the same parent.
+4. **`preceding-sibling::*`**: Selects all sibling nodes that appear *before* the context node under the same parent.
+5. **`descendant::*`**: Selects all child, grandchild, and nested nodes (`//`).
+6. **`child::*`**: Selects immediate child nodes (`/`).
 
-## 12.8 CSS Selectors — Refined
-Theory: `#id/.class/[attr=val]/tag>child/:first-child/:nth-of-type`. 2nd after id, faster than XPath, native, pseudo-classes. No up/text.
-Enterprise: classes/attrs/hierarchy `input[name='lname']`, `[data-testid]`.
-```java
-driver.findElement(By.cssSelector("input[name='lname']"));
-driver.findElement(By.cssSelector("#fname"));
-```
-Triage: need parent/text → XPath/role. Anti: `>`/`nth-child` brittle chains.
+---
 
-## 12.9 XPath — Refined
-Theory: Traverse DOM when id/name/CSS fail. `//input[@id]` anywhere vs `/html` root absolute (brittle). Attr/index/predicate/functions. `$x()` validate.
-Enterprise: complex axes/text only; relative always.
-```java
-driver.findElement(By.xpath("//input[@name='email']"));
-```
-Triage: absolute breaks CI → rewrite relative. Anti: DevTools Copy-XPath commit.
+## 12.9 Text-Based XPath: `text()` vs. `normalize-space()`
 
-## 12.10 Relative XPath — Refined
-Theory: `//tag[@attr]` anywhere resilient; scoped `//form[@id]//input[@type]`. No `//div[3]/span[2]` unless stable. Prefer id/name/testid/aria over hashed classes.
-Enterprise: short unique `1/1` + assert.
-```java
-driver.findElement(By.xpath("//form[@id='login']//input[@type='password']"));
-```
-Triage: index shift → anchor stable parent. Anti: absolute + indexes.
-
-## 12.11 XPath Axes — Refined
-Theory: 13 axes; SDET child/parent/ancestor/descendant/following/preceding/siblings/self/attribute. `//base/axis::target`.
-Enterprise: dynamic tables, label→input mapping over positional.
-```java
-driver.findElement(By.xpath("//label[text()='Email']/following-sibling::input"));
-driver.findElement(By.xpath("//span[text()='Price']/ancestor::div[@class='product']"));
-```
-Triage: direct attrs unstable → axes anchor. Anti: positional XPath.
-
-## 12.12 Parent/Child/Ancestor/Descendant — Refined
-Theory: Vertical: parent immediate (`/..` shorthand), child direct (default), ancestor to root, descendant any depth.
-Enterprise: stable child anchors container over absolute chains.
-```java
-driver.findElement(By.xpath("//input[@id='email']/parent::div"));
-driver.findElement(By.xpath("//td[text()='John']/ancestor::table"));
-driver.findElement(By.xpath("//table[@id='t1']/descendant::td"));
-```
-Triage: long chain → ancestor form/div. Anti: absolute chains.
-
-## 12.13 Following/Preceding — Refined
-Theory: Horizontal/document order: following after excl descendants, following-sibling same-parent later, preceding before excl ancestors, preceding-sibling earlier. Same level → *-sibling.
-Enterprise: unlabeled inputs `//label/following-sibling::input`.
-```java
-driver.findElement(By.xpath("//label[text()='Password']/following-sibling::input"));
-driver.findElement(By.xpath("//td[text()='Jason']/following-sibling::td[1]"));
-```
-Triage: wrong node → sibling vs global confusion. Anti: `following` for same-level (use sibling).
-
-## 12.14 Text-Based XPath — Refined
-Theory: Stable text w/o attrs: exact `text()='Login'`, `normalize-space(.)`, partial `contains/startswith`. Prefer `.` nested over `text()`; combine `contains(text)+contains(@href)`; avoid `//*[contains]` matching html/body.
-Enterprise: no-attribute buttons/links.
-```java
-By.xpath("//button[contains(.,'Add to cart')]"); By.xpath("//h3[normalize-space(.)='Aurora']");
-```
-Triage: whitespace fail → normalize; nested markup miss → `.` not text(). Anti: `//*` broad.
-
-## 12.15 Dynamic XPath — Refined
-Theory: Partial/predicate/relationship not fixed: `contains(@attr)/starts-with/normalize/text + and/or/not/last/position`.
-Enterprise: shortest resilient; stable parent + partial over auto absolute.
-```java
-By.xpath("//button[contains(@id,'submit')]"); By.xpath("//div[contains(@class,'card')][.//h3[normalize-space(.)='Laptop']]//button");
-```
-Triage: auto-ID churn → partial anchor. Anti: fixed auto values.
-
-## 12.16 Dynamic Attributes — Refined
-Theory: Volatile `user_83491/u_0_2`: `starts-with(@id,'user_')` prefix stable, `contains(@id,'username')` middle, combined `[@type and contains]`. XPath1.0 no `ends-with` → `substring()`. Else pivot text/axes.
-Enterprise: framework-generated IDs.
-```java
-By.xpath("//input[starts-with(@id,'user_')]"); By.xpath("//input[@type='text' and contains(@id,'user')]");
-```
-Triage: no stable substring → abandon attrs. Anti: ends-with in browser XPath.
-
-## 12.17 CSS vs XPath — Refined
-Theory: Playwright auto-detect `css=` vs `//`. CSS faster/readable/pierces open shadow + `:visible/:has-text/:has/:is` (scope `article:has-text("Pay")`); XPath up/parent/text/axes/unions, no shadow, slower brittle. Both last behind Role/TestId.
-Enterprise: role/testid first; CSS fallback; XPath parent/text only.
-```java
-page.locator("css=button:visible"); page.locator("xpath=//button[@type='submit']");
-```
-Triage: shadow fail XPath → CSS piercing; parent needed → XPath. Anti: bare `:has-text` (body).
-
-## 12.18 Stable Locator Design — Refined
-Theory: Priority Role>Label>Placeholder>Text>Alt/Title>TestId>CSS>XPath. User perception not DOM, a11y-enforcing. Strict single-match; scope chaining/filter.
-Enterprise: survives class/layout churn; `nth/first` hides ambiguity → fix not index.
-```js
-const row = page.getByRole('row').filter({hasText: 'monserrat44@example.com'});
-await row.getByRole('checkbox', {name: 'Select row'}).check();
-```
-Triage: multi-match strict throw → narrow name/filter/chain. Anti: nth/first default.
-
-## 12.19 data-testid — Refined
-Theory: Most resilient non-user: survives text/role/style via dev-QA contract. No role/label, canvas/third-party, repeated cards.
-Enterprise: kebab/BEM stable/short unique/scoped, never style/logic; `testIdAttribute:'data-qa'`; overuse loses behavior → role when name matters.
+### The Hidden Trap with `text()`
+Many web applications contain whitespace, line breaks, or child elements within text:
 ```html
-<button data-testid="checkout-submit">Place order</button>
+<button id="checkout">
+  <span>Submit</span>
+  Order
+</button>
 ```
-```js
-await page.getByTestId('checkout-submit').click();
-```
-Triage: missing → request contract; dup → container-scope. Anti: testIds everywhere.
+- `//button[text()='Submit Order']` $\to$ **FAILS!** `text()` only inspects immediate direct text nodes and does not trim surrounding newlines/spaces.
+- **The Senior Fix: `normalize-space()`**:
+  `//button[normalize-space()='Submit Order']`
+  - Strips leading and trailing whitespace.
+  - Collapses multiple internal whitespace characters/newlines into a single space.
+  - Automatically aggregates text across all child nodes!
 
-## 12.20 Locator Code Snippets — Refined
-Theory: Standard Role/Label/Placeholder/Alt/TestId/Text/frame/CSS set; codegen then edit; Locator + web-first `toHaveText`, never `page.$` Handle + snapshot assert.
-Enterprise: copy-paste library in POMs, pick-locator validated.
-```js
-await page.getByRole('button', {name: 'Sign in'}).click();
-await page.getByLabel('Password').fill('secret');
-await page.frameLocator('#my-frame').getByRole('button').click();
-await expect(locator).toHaveText('Hi'); // retries, not textContent+toBe
-```
-Triage: `page.$` stale → Locator. Anti: snapshot asserts.
+---
 
-## 12.21 Locator Anti-Patterns — Refined
-Theory: BAD structural `#tsf>div:nth-child`, `//*[@id]/div[2]`, `.btn-primary`, `nth(1)`, bare `:has-text("Pay")` body, snapshot `textContent→toBe` no retry. Tied structure/classes/IDs, index shifts, broad matches, races.
-Enterprise: fix Role/Label/scoped filter/TestId/exact/regex + locator asserts.
-```js
-// BAD → GOOD:
-page.locator('.btn-primary') → page.getByRole('button', {name: 'Pay'});
-await locator.textContent() + toBe → await expect(locator).toHaveText('Hi');
-```
-Triage: DevTools XPath + `>`/`nth-child` → rewrite. Anti: listed BADs.
+## 12.10 Dynamic XPath for Data Grids & Complex Tables
 
-## 12.22 Locator Interview Questions — Refined
-1. Locator vs Handle? Lazy re-query auto-wait never stale vs snapshot. 2. Why Role first? Resilient + a11y. 3. Strict? Single-action multi-match throws; filter/exact/scope. 4. Fix 2 matches? Narrow/filter/chain, first/last intentional only. 5. CSS vs XPath? Shadow+fast vs parent/text no-shadow last. 6. When TestId? No semantic hook contract. Trap testIds-always-best (loses behavior).
+### Real-World Challenge: Resolving Action Buttons by Row Content
+In an enterprise accounting table, each row displays an Invoice ID, Customer Name, Amount, and an "Approve" button. The row position is non-deterministic (dynamic sorting).
+
+```html
+<table>
+  <tr>
+    <td>INV-9021</td>
+    <td>Deloitte Consulting</td>
+    <td>$45,000</td>
+    <td><button class="btn-approve">Approve</button></td>
+  </tr>
+</table>
+```
+
+### The Senior XPath Solution using Sibling Axes:
+```xpath
+//tr[td[normalize-space()='INV-9021']]//button[contains(@class, 'btn-approve')]
+```
+- **How it evaluates**:
+  1. Finds the specific `<td>` containing text `'INV-9021'`.
+  2. Traverses up to the enclosing `<tr>` row node.
+  3. Scopes down into that row to locate the specific `'Approve'` button.
+  4. Guarantees 100% isolation from other rows in the table.
+
+---
+
+## 12.12 Comprehensive Engine Comparison: CSS vs. XPath
+
+| Dimension | CSS Selectors | XPath 1.0 (Browser Standard) |
+| :--- | :--- | :--- |
+| **Execution Speed** | Faster: Native C++ browser implementation (`querySelectorAll`). | Slightly slower: Requires DOM parsing engine, but difference is $<5\text{ms}$. |
+| **Directional Traversal**| **Unidirectional**: Only downward to children and forward to subsequent siblings. | **Bidirectional**: Can navigate up to parents (`ancestor`), backwards (`preceding-sibling`), and downwards. |
+| **Text-Based Selection**| Not supported natively in standard CSS. | Supported natively: `text()`, `contains()`, `normalize-space()`. |
+| **Shadow DOM Support** | Can penetrate open Shadow DOM using specific browser vendor roots. | Cannot penetrate Shadow DOM roots. |
+| **Readability & Syntax**| Clean, compact, maintainable. | Verbose, powerful, complex syntax. |
+
+---
+
+## 12.14 Enterprise `data-testid` Strategy & Frontend Governance
+
+### The "Self-Defending" Locator Contract
+To prevent frontend developers from breaking automated tests every sprint, senior SDETs establish a formal **Definition of Done (DoD)** with development squads:
+1. Every interactive element (inputs, buttons, dropdowns, table cells) must receive a dedicated test attribute:
+   `data-testid="<component>-<action>-<descriptor>"` (e.g. `data-testid="checkout-submit-btn"`).
+2. Development teams configure build linters (e.g. ESLint `eslint-plugin-testing-library`) to enforce presence.
+3. Test suites configure custom locator engines prioritizing `data-testid` above all else.
+
+---
+
+## 12.15 Production-Ready Code: Dynamic Table Row Resolver
+
+```java
+package com.deloitte.sdet.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import java.util.Objects;
+
+public final class InvoiceTableComponent {
+
+    private final WebDriver driver;
+
+    public InvoiceTableComponent(WebDriver driver) {
+        this.driver = Objects.requireNonNull(driver);
+    }
+
+    /**
+     * Resolves and clicks the action button for a specific invoice ID dynamically.
+     */
+    public void clickInvoiceAction(String invoiceId, String actionName) {
+        // Parametric XPath leveraging axes to guarantee row isolation
+        String dynamicXPath = String.format(
+            "//tr[td[normalize-space()='%s']]//button[normalize-space()='%s']",
+            invoiceId, actionName
+        );
+
+        WebElement actionButton = driver.findElement(By.xpath(dynamicXPath));
+        actionButton.click();
+    }
+}
+```
+
+---
+
+## 12.16 Top 8 Locator Anti-Patterns in Flaky Test Suites
+
+1. ❌ **Absolute XPath**: `By.xpath("/html/body/div[1]/div[2]/form/input[1]")`. Breaks on every minor DOM rearrangement.
+2. ❌ **Compound Class Names in `By.className()`**: `By.className("btn btn-primary active")` throws `InvalidSelectorException`! `By.className` only accepts a single class; use `By.cssSelector(".btn.btn-primary.active")` instead.
+3. ❌ **Hardcoded Auto-Generated IDs**: `By.id("ember1042")` or `By.id("j_idt42:submit")`. These IDs change dynamically on every server deployment or React re-render.
+4. ❌ **Overly Generic Text Matches**: `By.xpath("//*[text()='Save']")`. Matches hidden dialogs, dropdown labels, and headers before finding the intended button. Always qualify the tag: `//button[normalize-space()='Save']`.
+5. ❌ **Indexing on Fragile Sibling Trees**: `(//div[@class='item'])[3]`. If filtering changes or an item is deleted, test silently acts on the wrong entity.
+6. ❌ **Case-Sensitive Text Traps**: Relying on exact uppercase `text()='SUBMIT'` when CSS `text-transform: uppercase` renders lowercase DOM text as uppercase.
+7. ❌ **Non-Normalized Whitespace Matching**: `By.xpath("//span[text()='Login']")` failing because the HTML contains `<span> Login </span>`.
+8. ❌ **Duplicated Locator Strings Across Page Objects**: Copy-pasting locator strings into multiple classes. Locators must live in exactly one Page Object.
+
+---
+
+## 12.17 High-Stakes Senior Locator Interview Questions & Spoken Solutions
+
+### Q1: "How do you locate an input field whose `id` attribute is dynamically generated on every page refresh, such as `input_user_98a7bc21`?"
+> *"I use two primary strategies depending on whether CSS or XPath is preferred:*
+> 1. *Using CSS Selectors with the **Prefix Matcher (`^=`)**:
+>    `By.cssSelector("input[id^='input_user_']")`
+>    *This matches any input whose ID starts with the static prefix `input_user_`, ignoring the dynamic hex suffix.*
+> 2. *If multiple inputs share that prefix, I anchor to a stable label or parent container using XPath axes:
+>    `By.xpath("//label[normalize-space()='Username']/following-sibling::input")`
+>    *This creates a semantic, resilient relationship that remains 100% stable regardless of ID mutations."*
+
+---
+
+### Q2: "Can a CSS Selector traverse upwards from a child element to its parent element in Selenium?"
+> *"Historically in CSS Level 3, traversal was strictly unidirectional—CSS could never navigate upwards to parents or backwards to preceding siblings.
+> 
+> *However, in modern web browsers implementing the **CSS Level 4 `:has()` relational pseudo-class**, you CAN select a parent based on its child:
+> `div.card:has(> button.btn-primary)`
+> *This selects the `div.card` only if it contains an immediate primary button.*
+> 
+> *That said, for cross-browser testing in Selenium where older browser versions or specific automation engines might not support `:has()`, the industry standard for upward traversal remains **XPath with the `parent::` or `ancestor::` axes**."*

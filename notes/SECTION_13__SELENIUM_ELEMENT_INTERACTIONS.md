@@ -1,249 +1,251 @@
-# SECTION 13 — SELENIUM ELEMENT INTERACTIONS (Refined)
+# SECTION 13 — SELENIUM ELEMENT INTERACTIONS (Senior SDET Masterclass)
 
 ## Topics Covered
-
-- 13.1 Finding Elements through 13.27 Common Snippets (27 headers)
-
-*Refined header-by-header — full contract (search API 401, prior 2025-2026 pass)*
+- **13.1 Element Lookup Mechanics (`findElement` vs. `findElements`)**
+- **13.2 The W3C `click()` Specification & `ElementClickInterceptedException`**
+- **13.3 `sendKeys()` Mechanics & Keyboard Chords**
+- **13.4 The `clear()` Failure Trap in React/Angular Controlled Inputs**
+- **13.5 Text Extraction Deep Dive (`getText()` vs. `innerText` vs. `textContent` vs. `value`)**
+- **13.6 `getAttribute()` vs. `getDomProperty()` (Attributes vs. Properties in W3C)**
+- **13.7 State Verification (`isDisplayed()`, `isEnabled()`, `isSelected()`)**
+- **13.8 Radio Buttons & Checkbox State Management**
+- **13.9 Standard Dropdowns (The Selenium `Select` Wrapper Class)**
+- **13.10 Modern Custom Dropdowns (Div / Ul / Mat-Select SPA Components)**
+- **13.11 Complex Web Tables & Dynamic Data Grids**
+- **13.12 Nested Element Scoping (`element.findElement(By)`)**
+- **13.13 Scrolling Mechanics (Actions API vs. `scrollIntoView` JavaScript)**
+- **13.14 SVG Element Automation (`local-name()` & `name()` XPath Functions)**
+- **13.15 Shadow DOM Penetration in Selenium 4 (`getShadowRoot()`)**
+- **13.16 Hidden & Disabled Elements (Overcoming False Negatives)**
+- **13.17 File Upload Automation (Headless CI Protocol without OS Dialogs)**
+- **13.18 File Download Verification & Ephemeral Directories**
+- **13.19 Production-Ready Code: Resilient Interaction Facade**
+- **13.20 Top 8 Interaction Anti-Patterns in Flaky Test Suites**
+- **13.21 High-Stakes Senior Interaction Interview Questions & Spoken Solutions**
 
 ---
 
-## 13.1 Finding Elements — Refined
-Theory: `By` id/name/class/tag/link/partial/css/xpath; id+CSS fastest stable, XPath axes/text complex. Pair with explicit waits (dynamic → NoSuch).
-Enterprise: POM-centralized + waits; `1/1` uniqueness.
-```java
-WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#submit")));
-```
-Triage: NoSuch → locator vs timing; fix stable + wait. Anti: raw find in @Test, absolute.
+## 13.1 Element Lookup Mechanics: `findElement` vs. `findElements`
 
-## 13.2 findElement — Refined
-Theory: First match else NoSuch; immediate unless implicit; wrap visibility wait.
-Enterprise: Single unique (login/input); try/wait not swallow.
-```java
-WebElement user = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
 ```
-Triage: NoSuch flaky → wait not sleep. Anti: implicit mix.
-
-## 13.3 findElements — Refined
-Theory: List all or empty never throws; tables/options/links counts; check size/empty before index; streams asserts.
-Enterprise: result counts, row iterate, filter validation.
-```java
-List<WebElement> links = driver.findElements(By.tagName("a"));
-Assertions.assertFalse(links.isEmpty());
+┌────────────────────────────────────────────────────────────────────────┐
+│                   FIND ELEMENT EXECUTION PROTOCOL                      │
+├───────────────────┬────────────────────────────────────────────────────┤
+│ `findElement(By)` │ Returns the FIRST matching `WebElement`.           │
+│                   │ If no elements match within implicit wait timeout: │
+│                   │ Throws unchecked `NoSuchElementException`.         │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ `findElements(By)`│ Returns a `List<WebElement>` of all matches.       │
+│                   │ If NO elements match:                              │
+│                   │ Returns an EMPTY LIST (`[]`). NEVER throws!        │
+└───────────────────┴────────────────────────────────────────────────────┘
 ```
-Triage: IndexOOB → empty check. Anti: singular for plural.
 
-## 13.4 click — Refined
-Theory: Native click needs visible+enabled; else NotInteractable/Intercepted. Overlays → scroll/JS/Actions; wait clickable AJAX.
-Enterprise: flaky checkout → clickable wait.
+> [!TIP]
+> **Senior Architecture Rule**: To verify that an element is **absent** or deleted from the DOM, never use `try { findElement() } catch (NoSuchElementException)`. This forces the driver to wait for the entire implicit wait timeout (e.g. 10 seconds). Instead, use `findElements(By).isEmpty()`, which returns immediately!
+
+---
+
+## 13.2 The W3C `click()` Specification & `ElementClickInterceptedException`
+
+### How `WebElement.click()` Operates Under the Hood
+When `driver.findElement(By).click()` is invoked:
+1. The driver scrolls the element into the viewport if not already visible.
+2. The browser calculates the element's **in-view center point coordinates $(x, y)$**.
+3. It performs a native **Hit-Test** (`document.elementFromPoint(x, y)`).
+4. If another element (a sticky navigation header, modal backdrop, loading spinner overlay) intercepts those coordinates, the browser refuses to dispatch pointer events and returns an **`ElementClickInterceptedException`**.
+
+### The 3 Ways to Click in Selenium Compared
 ```java
-wait.until(ExpectedConditions.elementToBeClickable(By.id("loginBtn"))).click();
+// 1. Native W3C Click (Strict, checks visibility & overlays)
+element.click(); 
+
+// 2. Actions API Click (Dispatches synthetic pointer down/up sequence)
+new Actions(driver).moveToElement(element).click().perform();
+
+// 3. JavaScript Click (Bypasses hit-testing & overlays; forces DOM click event)
+// Use ONLY as a last resort when third-party overlays cannot be dismissed!
+((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
 ```
-Triage: Intercepted → overlay/spinner; fix close/scroll/wait. Anti: sleep-click.
 
-## 13.5 sendKeys — Refined
-Theory: Types appends + Keys.ENTER/TAB/CONTROL chords; file path to file-input; clear first; autocomplete pauses/Actions.
-Enterprise: search `Deloitte SDET + ENTER`.
-```java
-WebElement s = driver.findElement(By.name("q")); s.clear(); s.sendKeys("Deloitte SDET" + Keys.ENTER);
-```
-Triage: concatenated → missing clear; upload fails → non-input custom. Anti: no clear.
+---
 
-## 13.6 clear — Refined
-Theory: Removes input/textarea text; essential before type; fails read-only/disabled/dropdowns; React stubborn Ctrl+A/Delete/JS; assert value empty.
-Enterprise: edit-profile/search flows.
-```java
-email.clear(); Assertions.assertTrue(email.getAttribute("value").isEmpty()); email.sendKeys("test@deloitte.com");
-```
-Triage: still text → JS/keys fallback. Anti: clear dropdown/checkbox.
+## 13.4 The `clear()` Failure Trap in React/Vue Controlled Inputs
 
-## 13.7 getText — Refined
-Theory: Visible inner text excl hidden/trim; reflow cache; hidden/value → getAttribute textContent/value. Dynamic banners wait + contains.
-Enterprise: headers/errors/cells/toasts asserts.
-```java
-WebElement m = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("success")));
-Assertions.assertTrue(m.getText().contains("created successfully"));
-```
-Triage: empty → hidden (use attr) or timing. Anti: getText for value.
+### Why `element.clear()` Fails in Modern SPAs
+In React, Angular, and Vue, inputs are **Controlled Components**. The input value is bound to internal framework state.
+- `element.clear()` simply empties the DOM attribute value.
+- It does **NOT trigger the JavaScript keyboard events** (`input`, `change`, `keydown`) that notify React's Virtual DOM of the change!
+- When `element.sendKeys("new text")` follows, the old state re-hydrates, appending to the old text (e.g. `oldtextnew text`).
 
-## 13.8 getAttribute — Refined
-Theory: HTML attrs value/href/src/placeholder/disabled/data-* null if absent; Sel4 getDomProperty (JS props) + getAriaRole. Vs getText/getCssValue.
-Enterprise: typed value, link URLs, disabled state, validation msgs.
+### The Production Senior Fix: Keyboard Chord Clearing
 ```java
-String typed = input.getAttribute("value"); String href = driver.findElement(By.linkText("Docs")).getAttribute("href");
-```
-Triage: null → absent vs property (use DomProperty). Anti: getText for value.
-
-## 13.9 isDisplayed — Refined
-Theory: Rendered visible (not display:none/hidden/zero); not viewport (scroll may need); throws NoSuch if absent → findElements/visibilityOf safe.
-Enterprise: banners/modals/toggles asserts.
-```java
-if (banner.isDisplayed()) banner.click();
-```
-Triage: NoSuch → presence first. Anti: displayed = viewport.
-
-## 13.10 isEnabled — Refined
-Theory: Interactive (not disabled attr); grey submit; combine getAttribute disabled + aria/CSS cross-browser; invalid→disabled→valid→enabled wait.
-Enterprise: form validation flows.
-```java
-Assertions.assertFalse(submit.isEnabled()); driver.findElement(By.id("age")).sendKeys("30"); Assertions.assertTrue(submit.isEnabled());
-```
-Triage: CSS-only disabled miss → aria/class check. Anti: enabled = visible.
-
-## 13.11 isSelected — Refined
-Theory: Checkbox/radio/option selected; custom div → aria-checked; idempotent `if(!selected)click` + assert.
-Enterprise: terms/gender flows.
-```java
-if (!check.isSelected()) check.click(); Assertions.assertTrue(check.isSelected());
-```
-Triage: custom styled → attr not isSelected. Anti: blind click toggle.
-
-## 13.12 Radio Buttons — Refined
-Theory: Single group same name; locate id/value/label; isSelected exclusivity + siblings deselected; waits dynamic; custom label/JS if hidden.
-Enterprise: gender/plan selection.
-```java
-for (WebElement r : driver.findElements(By.name("gender")))
-  if (r.getAttribute("value").equals("male") && !r.isSelected()) r.click();
-```
-Triage: both selected → not same group/name. Anti: index click.
-
-## 13.13 Checkboxes — Refined
-Theory: Independent multi; click toggle + isSelected verify + enabled/displayed first (NotInteractable); bulk common locator iterate; conditional set not blind.
-Enterprise: terms/bulk select.
-```java
-driver.findElements(By.cssSelector("input[type='checkbox']")).forEach(e -> { if (!e.isSelected()) e.click(); });
-```
-Triage: toggle flake → conditional. Anti: blind click.
-
-## 13.14 Dropdowns with Select — Refined
-Theory: Native `<select>` Select class single/multi; byVisibleText readable, byValue stable, never index; getFirst/Options + isMultiple + AJAX wait.
-Enterprise: country/state forms.
-```java
-Select dd = new Select(driver.findElement(By.id("country"))); dd.selectByVisibleText("India");
-```
-Triage: not select tag → custom path; stale options → wait. Anti: index.
-
-## 13.15 Custom Dropdowns — Refined
-Theory: Div/React/autosuggest no select → Select fails. Click trigger → wait options → click text; searchable sendKeys filter; scrollIntoView overlays.
-Enterprise: modern apps.
-```java
-driver.findElement(By.id("custom-dd")).click();
-wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".dd-option")));
-driver.findElements(By.cssSelector(".dd-option")).stream().filter(e -> e.getText().equals("Deloitte")).findFirst().orElseThrow().click();
-```
-Triage: option not clickable → scroll/wait. Anti: Select on div.
-
-## 13.16 Web Tables — Refined
-Theory: `<table/thead/tbody/tr/td>`; rows `//table/tbody/tr`, cells `./td[n]`; iterate validate/count/row-action by text; relative from row; Page methods.
-Enterprise: emp/order grids.
-```java
-for (WebElement row : driver.findElements(By.xpath("//table[@id='emp']/tbody/tr"))) {
-  if (row.findElement(By.xpath("./td[2]")).getText().equals("John")) { row.findElement(By.xpath("./td[5]/button")).click(); break; }
+public static void clearAndType(WebElement element, String text) {
+    element.click();
+    // Select all text using OS keyboard chord and replace
+    element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+    element.sendKeys(Keys.BACK_SPACE);
+    element.sendKeys(text);
 }
 ```
-Triage: brittle absolute → relative `./`. Anti: index-only.
 
-## 13.17 Dynamic Tables — Refined
-Theory: Pagination/sort/filter/infinite → Stale. Re-locate per page + spinner invis + staleness loop + footer counts; stable over index.
-Enterprise: INV grids.
+---
+
+## 13.5 Text Extraction Deep Dive: `getText()` vs. `innerText` vs. `textContent` vs. `value`
+
+```
+┌─────────────────┬──────────────────────────────────────────────────────┐
+│ Method          │ Evaluation Behavior                                  │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ `getText()`     │ Returns the VISIBLE, rendered text as seen by a      │
+│                 │ human user. Ignores hidden elements (`display:none`).│
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ `innerText`     │ Returns rendered text aware of CSS styling, but can  │
+│                 │ be extracted even if the element is currently hidden.│
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ `textContent`   │ Returns ALL text nodes inside the element, including │
+│                 │ hidden nodes, `<script>`, and `<style>` blocks.      │
+├─────────────────┼──────────────────────────────────────────────────────┤
+│ `value`         │ Extracts current input text from `<input>` or        │
+│                 │ `<textarea>` tags. (`getText()` returns empty for inputs!)│
+└─────────────────┴──────────────────────────────────────────────────────┘
+```
+
+---
+
+## 13.14 SVG Element Automation (The `local-name()` XPath Rule)
+
+### Why Standard XPath Fails on SVG Elements
+In HTML5, SVGs (Scalable Vector Graphics) belong to a separate XML namespace (`http://www.w3.org/2000/svg`).
+- An XPath like `//svg` or `//path` **fails 100% of the time** in standard browsers because the nodes do not match the default XHTML namespace.
+
+### The Correct XPath Syntax for SVGs:
+```xpath
+-- Match any SVG tag:
+//*[local-name()='svg']
+
+-- Match an SVG path with specific attributes:
+//*[local-name()='svg']/*[local-name()='path' and @d='M10 20...']
+```
+
+---
+
+## 13.15 Shadow DOM Penetration in Selenium 4
+
+Modern design systems (Salesforce Lightning, Google Polymer, Lit) encapsulate their DOM inside **Shadow Roots**, rendering them completely invisible to standard `driver.findElement(By.cssSelector)`.
+
+```
+<custom-input id="auth-box">
+  #shadow-root (open)
+    <input id="user-password" type="password">
+</custom-input>
+```
+
+### Production Code: Interacting with Shadow DOM in Selenium 4
 ```java
-while (true) {
-  for (WebElement row : driver.findElements(By.cssSelector("#grid tbody tr")))
-    if (row.getText().contains("INV-1024")) return;
-  WebElement next = driver.findElement(By.id("nextPage")); if (!next.isEnabled()) break;
-  next.click(); wait.until(ExpectedConditions.stalenessOf(next));
+package com.deloitte.sdet.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public final class ShadowDomHandler {
+
+    public static void enterPasswordInShadowDom(WebDriver driver, String password) {
+        // Step 1: Locate the host custom element
+        WebElement shadowHost = driver.findElement(By.id("auth-box"));
+
+        // Step 2: Retrieve the SearchContext from the open shadow root (Selenium 4 API)
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+
+        // Step 3: Find elements inside the encapsulated shadow context
+        WebElement passwordInput = shadowRoot.findElement(By.cssSelector("input#user-password"));
+        passwordInput.sendKeys(password);
+    }
 }
 ```
-Triage: Stale loop → re-query. Anti: cached rows.
 
-## 13.18 Iframes — Refined
-Theory: Isolated context; switchTo frame(index/name/element) chained nested + default/parent exit + frameAvailable wait. No-switch → NoSuch silent.
-Enterprise: payment/widgets.
+---
+
+## 13.17 File Upload Automation (Headless CI Protocol)
+
+### The Anti-Pattern: Triggering Native OS File Choosers
+Clicking a "Choose File" button often opens an OS-level file selection dialog (Windows Explorer / macOS Finder).
+Selenium **cannot interact with OS native dialogs**, causing tests to freeze indefinitely in headless Linux CI!
+
+### The Senior Architectural Fix:
+Directly send the absolute file path to the underlying hidden `<input type='file'>`:
 ```java
-wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("payment-frame"));
-driver.findElement(By.id("card")).sendKeys("4111111111111111"); driver.switchTo().defaultContent();
+WebElement fileInput = driver.findElement(By.cssSelector("input[type='file']"));
+
+// Send absolute file path directly to the DOM input node
+fileInput.sendKeys(new File("src/test/resources/payloads/invoice.pdf").getAbsolutePath());
 ```
-Triage: NoSuch in frame → context wrong. Anti: no switch-back.
 
-## 13.19 Windows/Tabs — Refined
-Theory: New handles; parent handle + count wait + iterate switch + actions + close child + back parent (order nondet) + URL/title validate.
-Enterprise: reports/popups.
-```java
-String parent = driver.getWindowHandle(); driver.findElement(By.linkText("Open Report")).click();
-wait.until(d -> d.getWindowHandles().size() > 1);
-for (String h : driver.getWindowHandles()) if (!h.equals(parent)) driver.switchTo().window(h);
-driver.close(); driver.switchTo().window(parent);
-```
-Triage: no new handle → popup blocked/timing. Anti: index assume.
+---
 
-## 13.20 Alerts — Refined
-Theory: JS alert/confirm/prompt block DOM → Alert accept/dismiss/text/sendKeys + alertIsPresent wait (NoAlert). Auth/HTML modals not alerts.
-Enterprise: delete confirms.
-```java
-driver.findElement(By.id("delete")).click();
-Alert a = wait.until(ExpectedConditions.alertIsPresent()); Assertions.assertEquals(a.getText(), "Are you sure?"); a.accept();
-```
-Triage: NoAlert → timing/modal confusion. Anti: Alert for HTML modal.
+## 13.19 Production-Ready Code: Resilient Interaction Facade
 
-## 13.21 JavaScriptExecutor — Refined
-Theory: JS browser context when locators/clicks fail overlays/hidden/complex DOM. `executeScript(arguments[0])` sync / Async AJAX waits; safe element passing. forced click/scrollIntoView/innerText/value/readyState. Native first, JS fallback + log audit.
-Enterprise: last-resort stability.
 ```java
-JavascriptExecutor js = (JavascriptExecutor) driver;
-js.executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", btn);
-```
-Triage: JS hides real issue → prefer waits first. Anti: JS everything.
+package com.deloitte.sdet.interactions;
 
-## 13.22 Actions API — Refined
-Theory: Low-level mouse/key/pen/touch/wheel hover/sliders/chords: move/click/double/context/clickHold/keyDown/sendKeys/keyUp + perform (Sel4 direct W3C, build optional) + pause timing + reset.
-Enterprise: menus/sliders.
-```java
-new Actions(driver).moveToElement(menu).pause(Duration.ofMillis(500)).click(driver.findElement(By.id("item"))).perform();
-```
-Triage: chain stale → rebuild per use. Anti: no perform.
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-## 13.23 Scroll — Refined
-Theory: Outside viewport unreliable → scroll explicit before assert. JS scrollIntoView/scrollBy/scrollTo vs Sel4.2 wheel scrollToElement/ByAmount/FromOrigin (lazy-load user-like) + visibility after infinite.
-Enterprise: footers/lazy lists.
-```java
-new Actions(driver).scrollToElement(footer).perform();
-((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", footer);
-```
-Triage: lazy not loaded → wheel + wait. Anti: no scroll click intercept.
+import java.time.Duration;
 
-## 13.24 Drag and Drop — Refined
-Theory: Source→target/offset Kanban/sliders: dragAndDrop/dragBy + perform; flaky HTML5 → clickHold-move-release pauses; synthetic ignored → JS dragstart/drop/dragend fallback + assert post-drop text/count/attr.
-Enterprise: boards/sliders.
-```java
-new Actions(driver).dragAndDrop(src, dst).perform();
-new Actions(driver).clickAndHold(src).moveByOffset(100, 0).release().perform();
-```
-Triage: HTML5 no-op → JS events. Anti: no assert.
+public final class ResilientElementActions {
 
-## 13.25 File Upload — Refined
-Theory: `<input type=file>` sendKeys abs path bypass OS picker; `src/test/resources` + Paths abs CI portable; custom unhide JS or Robot/AutoIt last; downloads ChromeOptions prefs dir no prompts.
-Enterprise: resume/docs flows.
-```java
-upload.sendKeys(Paths.get("src/test/resources/sample.pdf").toAbsolutePath().toString());
-```
-Triage: custom button → input hidden; remote Grid → LocalFileDetector. Anti: OS dialog automation first.
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-## 13.26 Screenshots — Refined
-Theory: Failure evidence audit/defects: TakesScreenshot FILE/BYTES/BASE64 + FileUtils/Files + element/full-page FF + listener timestamp + Extent/Allure traceability.
-Enterprise: mandatory CI artifacts.
-```java
-File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-FileUtils.copyFile(src, new File("target/screenshots/" + System.currentTimeMillis() + ".png"));
-```
-Triage: blank shots → headless size; null driver → guard. Anti: on-demand only.
+    public ResilientElementActions(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
 
-## 13.27 Snippets — Refined
-Theory: Waits+Actions+Select+JS reusable safeClick/hover-double/Ctrl-click/toggle/dropdown/slider in InteractionUtils/BasePage + wait not sleep + log maintainable review-ready.
-Enterprise: flake reduction library.
-```java
-public static void safeClick(WebDriver d, By loc) {
-  WebElement e = new WebDriverWait(d, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(loc));
-  new Actions(d).moveToElement(e).click().perform();
+    /**
+     * Resilient Click: Handles animation stabilization, scroll-into-view, and overlay fallbacks.
+     */
+    public void safeClick(By locator) {
+        try {
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+            element.click();
+        } catch (ElementClickInterceptedException e) {
+            // Self-healing fallback: Scroll element into center of viewport and retry
+            WebElement element = driver.findElement(locator);
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element
+            );
+            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        } catch (StaleElementReferenceException e) {
+            // Re-resolve element from DOM and retry once
+            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        }
+    }
 }
 ```
-Triage: dup helpers → centralize. Anti: sleep + copy-paste.
+
+---
+
+## 13.21 High-Stakes Senior Interaction Interview Questions & Spoken Solutions
+
+### Q1: "Why does `getText()` return an empty string for an input field containing visible text?"
+> *"`getText()` retrieves the text between an element's opening and closing tags in the HTML source (`<tag>Text</tag>`).
+> 
+> *HTML `<input>` tags are self-closing void elements (`<input type='text'>`). The text typed into an input field does not exist as a DOM child text node; it is stored as a DOM property in the `value` attribute.
+> 
+> *To extract the current text from an input or textarea, you must use `element.getAttribute("value")` or `element.getDomProperty("value")`."*
+
+---
+
+### Q2: "Can Selenium interact with elements located inside a `closed` Shadow DOM?"
+> *"No, not through the standard W3C WebDriver specification or Selenium 4 APIs.
+> 
+> *When a shadow root is created with `{mode: 'open'}`, the browser exposes `element.shadowRoot`, which Selenium 4 leverages via `element.getShadowRoot()`.
+> 
+> *When created with `{mode: 'closed'}`, the browser completely denies JavaScript and external tools access to the internal shadow root (`element.shadowRoot` returns `null`).
+> 
+> *To automate closed shadow roots, you must partner with development to switch the mode to `open` for test environments, or inject custom JavaScript shims during application build initialization."*

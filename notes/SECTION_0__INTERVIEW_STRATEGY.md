@@ -1,351 +1,367 @@
-# SECTION 0 — INTERVIEW STRATEGY
+# SECTION 0 — INTERVIEW STRATEGY (Senior SDET Masterclass)
 
 ## Topics Covered
-
-- 0.1 Deloitte Role Expectations
-- 0.2 Senior SDET Competency Matrix
-- 0.3 Interview-Round Strategy
-- 0.4 Technical vs Scenario-Based Questions
-- 0.5 Project Deep-Dive Strategy
-- 0.6 Coding-Round Strategy
-- 0.7 Automation Architecture Strategy
-- 0.8 Behavioral / Leadership Questions
-- 0.9 STAR Answer Structure
-- 0.10 Questions to Ask the Interviewer
-- 0.11 Final Interview Checklist
-- 0.12 Current Baseline and Gaps
-
-*Generated from Deloitte Senior SDET Modular Prompts file — Section 0 built one-header-at-a-time with parallel subagent research + internet validation*
+- **0.1 Deloitte Role Expectations (Senior Consultant / Specialist Senior)**
+- **0.2 Senior SDET Competency Matrix (Junior vs Mid vs Senior vs Lead)**
+- **0.3 Interview-Round Strategy (The 5-Round Deloitte Loop)**
+- **0.4 Technical vs Scenario-Based Questions (Frameworks & Spoken Scripts)**
+- **0.5 Project Deep-Dive Strategy (The C-A-S-C-I Master Narrative & Architecture)**
+- **0.6 Coding-Round Strategy (The C-E-B-O-T Narration System)**
+- **0.7 Automation Architecture Strategy (Layered Decoupling & Boundary Rules)**
+- **0.8 Behavioral & Leadership Questions (Consulting & Client Ownership)**
+- **0.9 STARI Answer Structure (Situation-Task-Action-Result-Insight)**
+- **0.10 Strategic Questions to Ask the Interviewer (Panel, Manager, Partner)**
+- **0.11 Final Interview Checklist (24h, 1h, During, and Artifact Portfolio)**
+- **0.12 Current Baseline & 14-Day Remediation Roadmap**
 
 ---
 
 ## 0.1 Deloitte Role Expectations
 
-Deloitte hires Senior SDET / Senior Test Automation Engineer typically at **Senior Consultant / Specialist Senior** level — a billable, client-facing engineering owner, not a back-office tester. You are expected to deliver automation outcomes on client engagements while upholding Deloitte engineering and consulting standards.
+Deloitte hires Senior SDETs primarily into **Senior Consultant** or **Specialist Senior** tracks (under Core Business Operations, Quality Engineering, or Cloud Engineering practices). At this level, you are evaluated as a **billable, client-facing engineering authority and technical owner**, not a script executor who waits for test cases.
 
-- **Consulting mindset + client delivery ownership:** own workstream delivery — scope, plan, estimate, report status, manage risks/issues, and adapt to client processes. *Why it matters:* interview probes whether you can operate without hand-holding in ambiguous client environments.
-- **Automation architecture, not just scripts:** design scalable Playwright / Selenium / RestAssured frameworks (Page Objects, fixtures, data/test management, parallelization, reporting) with code quality (SOLID, linting, reviews). *Why it matters:* separates Senior from mid-level script writer.
-- **Shift-left + CI/CD integration:** embed quality into pipelines (GitHub Actions / Jenkins / Azure DevOps), quality gates, flaky-test triage, environments/test data strategy. *Why it matters:* Deloitte sells engineering excellence and delivery velocity, not manual regression.
-- **Stakeholder communication & eminence:** translate technical risk into business impact for Product Owners, dev leads, and client leadership; mentor juniors, contribute to CoPs, reusable assets, and proposals. *Why it matters:* Senior Consultants are judged on influence and leverage.
-- **Delivery rigor (billable + compliance):** timesheet discipline, SOW alignment, audit-friendly documentation, defect SLA governance, Agile ceremonies (Jira/Xray/Zephyr). *Why it matters:* proves you understand consulting economics vs. product-company QA.
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│               DELOITTE SENIOR SDET CORE ROLE PILLARS                   │
+├───────────────────┬───────────────────┬────────────────────────────────┤
+│ 1. ARCHITECTURE   │ 2. SHIFT-LEFT     │ 3. CONSULTING ADVISORY         │
+│ Zero-leak drivers,│ CI/CD quality     │ Business risk translation,     │
+│ isolated fixtures,│ gates, ephemeral  │ scope governance, pushback on  │
+│ scalable runners  │ test environments │ impossible deadlines           │
+├───────────────────┴───────────────────┴────────────────────────────────┤
+│ 4. CAPABILITY BUILDING & MENTORING                                     │
+│ Code reviews, PR quality standards, onboarding accelerators, CoE assets│
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-**What interviewers listen for:** end-to-end ownership stories ("client had X, I proposed Y, delivered Z with metrics"); framework design trade-offs; CI stability practices; how you pushed back on / influenced devs and clients; mentoring and review rigor.
+### The 4 Pillars of Senior Consulting Delivery
+1. **End-to-End Automation Architecture**: You must design and own complete automation ecosystems (Playwright/TypeScript or Selenium/Java/TestNG, REST Assured, and SQL/DB integration) from scratch. You own separation of concerns, thread-safe concurrency, dynamic data generation, resilient locator contracts, and distributed execution.
+2. **Shift-Left CI/CD Governance**: You own the quality gates within GitHub Actions, Jenkins, or Azure DevOps. You understand how to turn a 2-hour blocking regression suite into an 8-minute sharded PR gate, enforce flaky test quarantine budgets, and manage containerized test runners (Docker/Testcontainers).
+3. **Consulting Advisory & Client Influence**: You operate inside client pods with ambiguity. You translate technical defects into business risk ($ lost, SLA breach penalties, customer churn). When clients ask for "100% test automation in 2 weeks," you don't say yes; you present a risk-weighted automation ROI matrix.
+4. **Talent Multiplier & Mentoring**: You establish PR standards, author framework style guides, conduct code reviews, and upskill junior engineers and manual testers into automation contributors.
 
-**Trap points / anti-patterns to avoid:**
-1. **"I only automate what devs/QA lead tell me"** — signals lack of consulting proactivity; instead show you defined strategy, ROI, and coverage priorities.
-2. **"100% automation / zero defects" claims** — naive and non-credible in large client programs; talk risk-based coverage, flakiness budgets, and escaped-defect analysis.
-3. **Bad-mouthing clients or blaming devs for quality** — Deloitte values client-centricity; frame conflicts as alignment, trade-offs, and joint quality ownership.
+### Key Metrics Interviewers Listen For
+In your answers, you must anchor your achievements to industry-standard engineering and delivery metrics:
+- **Flaky Test Ratio (SLO)**: Reduced from 15–20% to `< 2%` across a 3,000+ test suite.
+- **Pipeline Feedback Loop**: PR feedback time reduced from 45–60 minutes down to `< 10 minutes`.
+- **Defect Detection Percentage (DDP)**: In-sprint automation catching `> 85%` of defects before staging.
+- **Escaped Defect Rate (EDR)**: Production escapes reduced by `> 60%` year-over-year.
+- **DORA Metrics**: Deployment frequency accelerated from bi-weekly to daily; Change Failure Rate (CFR) cut to `< 5%`; Mean Time to Recovery (MTTR) dropped to `< 45 minutes`.
+
+### Trap Points & Anti-Patterns to Avoid
+- ❌ **"I automate user stories assigned to me by the QA Lead."** *(Signals junior order-taker. Instead say: "I analyzed the sprint backlog, mapped user journeys to risk tiers, and designed the automation suite for critical paths.")*
+- ❌ **"Our goal was 100% automation coverage with zero defects."** *(Signals lack of enterprise reality. Instead say: "We targeted an 80/20 risk-based coverage model, prioritizing critical revenue paths on UI and pushing comprehensive edge cases to API and contract layers.")*
+- ❌ **"The developers wrote buggy code and refused to write unit tests."** *(Deloitte tests for collaborative client empathy. Instead say: "We had a testability gap, so I partnered with the dev lead to introduce contract testing and agreed upon stable `data-testid` attributes as part of the Definition of Done.")*
 
 ---
 
 ## 0.2 Senior SDET Competency Matrix
 
-Senior at Deloitte = independent automation owner who can design frameworks, debug CI failures, and mentor juniors — not just write scripts.
-
-| Competency | Expected Senior Level | How Deloitte Tests It |
-|---|---|---|
-| Java + DSA | OOP, collections, strings, exception handling; Easy-Medium DSA | Live coding: reverse string, duplicates, wait-retry logic |
-| Selenium / Playwright | Waits, locators, windows/frames, parallel runs | Design POM + explain flakiness fixes; 100-page scaling Q |
-| Framework Design | POM, TestNG, Maven/Gradle, config, reporting, utilities from scratch | "Explain your framework end-to-end" + whiteboard it |
-| API Testing | REST Assured, auth, schema/status validation, chaining | Code GET/POST + validate JSON; API vs UI coverage tradeoff |
-| TestNG + Reporting | Annotations, groups, parallel, retry, Extent/Allure | `staleElement`, parallel failure debugging scenario |
-| CI/CD | Git, Jenkins/GitHub Actions, Docker basics, pipeline ownership | "Pipeline is red — walk me through triage" |
-| SQL | Joins, aggregates, test-data setup/verification | Write join + verify UI/API vs DB |
-| Debugging + System Design | Logs, root-cause, env/test-data isolation, microservice awareness | Techno-managerial: flaky suite + defect leakage case |
-| Leadership / Agile | Mentoring, estimation, client communication, Jira/TestRail | Behavioral: conflict, missed deadline, mentoring example |
-
-**Must-have (screen-out if weak):** Java OOP + Selenium/Playwright fluency, POM + TestNG framework built hands-on, API testing, Git + Jenkins, SQL joins, defect lifecycle/Agile.
-
-**Differentiators (Senior → Lead signal):** Playwright + API + DB integrated framework, CI pipeline ownership + Docker, performance/security basics (JMeter, OWASP), BDD/Cucumber with client-facing communication, mentoring and test-strategy decisions.
-
-**Anti-patterns to avoid:**
-1. **Tool-only knowledge:** Can click/record in Selenium or Postman but cannot code framework utilities, waits, or retry logic in Java from scratch.
-2. **No debugging narrative:** Blames "environment issue / flaky test" without logs, root-cause analysis, quarantine strategy, or CI triage steps.
+| Competency Dimension | Junior SDET (1–3 yrs) | Mid-Level SDET (3–5 yrs) | Senior SDET (5–8+ yrs) — **Deloitte Target** | Lead / Principal SDET (8+ yrs) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Language & DSA** | Basic syntax, loops, uses ArrayList/HashMap without depth. | Understands OOP, basic Collections, writes linear solutions. | Low-level JVM memory (Stack vs Heap, GC tuning), thread safety, Big-O tradeoffs, stream pipelines. | Language internals, bytecode, custom classloaders, high-throughput memory optimizations. |
+| **UI Automation** | Records scripts, uses `Thread.sleep()`, brittle XPath. | Writes POM, uses explicit waits, basic TestNG runner. | Web-first assertions, auto-waiting mechanics, CDP/DevTools protocols, shadow DOM, iframe boundaries. | Framework design from scratch, self-healing architecture, cross-browser engine benchmarking. |
+| **API Automation** | Executes Postman collections, basic REST Assured GET/POST. | Asserts status codes and basic JSON fields using JsonPath. | Schema validation, OAuth2 token caching/refresh, request/response specs, POJO Jackson builders, WireMock. | Enterprise contract testing (Pact), distributed tracing (OTel), gRPC/GraphQL automation, chaos testing. |
+| **Concurrency & Scale** | Runs tests sequentially on local machine. | Configures `thread-count` in `testng.xml` but suffers flaky state. | `ThreadLocal` lifecycle management, worker isolation in Playwright, database race condition prevention. | Dynamic grid autoscaling on K8s (Selenoid/KEDA), distributed sharding across 50+ cloud runners. |
+| **CI/CD & DevOps** | Triggers manual builds in Jenkins UI. | Edits basic Jenkinsfile or GitHub Actions YAML steps. | Designs multi-stage declarative pipelines, matrix sharding, artifact caching, failure reporting, PR gates. | GitOps pipeline architecture, Docker image optimization, ephemeral preview environment provisioning. |
+| **Data Strategy** | Hardcodes test data in scripts or Excel sheets. | Uses Faker libraries or static JSON files. | API-based pre-seeding + teardown, worker-scoped data isolation, database transaction rollback. | Synthetic data generation engines, GDPR/HIPAA data masking pipelines, event-driven state hydration. |
+| **Triage & Debugging** | Re-runs failed tests manually until they pass. | Inspects stack traces and screenshots. | Systematic triage: inspects HAR/network, browser console logs, DOM snapshots, time-travel traces. | Flakiness analytics dashboards, automated quarantine pipelines, root-cause clustering algorithms. |
 
 ---
 
-## 0.3 Interview-Round Strategy
+## 0.3 Interview-Round Strategy (The 5-Round Deloitte Loop)
 
-Typical Deloitte Senior SDET loop has **4–5 rounds over 2–3 weeks**:
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   DELOITTE SENIOR SDET INTERVIEW LOOP                  │
+│                                                                        │
+│ [Round 1] Recruiter / Talent Acquisition (15-20 min)                   │
+│    └─ Filter: Role alignment, communication, notice, stack match       │
+│                                                                        │
+│ [Round 2] Technical Assessment / Screening (60 min)                    │
+│    └─ Filter: Live coding (Java/TS), DSA, SQL queries, MCQs            │
+│                                                                        │
+│ [Round 3] Core Technical & Automation Deep Dive (60 min)               │
+│    └─ Filter: Framework architecture, waits, API, multithreading       │
+│                                                                        │
+│ [Round 4] Systems, Scenarios & Whiteboarding (60 min)                  │
+│    └─ Filter: Triage broken CI, scale to 5k tests, design from scratch │
+│                                                                        │
+│ [Round 5] Partner / Director Techno-Behavioral (45 min)                │
+│    └─ Filter: Client leadership, consulting mindset, culture fit       │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-| Round | Focus | Duration | Evaluator lens |
-|---|---|---|---|
-| 1. HR / Recruiter screen | Fit, notice period, CTC, Selenium/Java years, Agile exposure | 15–20 min | Filter: communication + must-have keywords |
-| 2. Online assessment (often AMCAT/HackerRank) | Aptitude, Java output, SQL, 1–2 coding Qs, Selenium/API MCQs | 60–90 min | Baseline coding + automation literacy |
-| 3. Technical R1 – Coding + Core automation | Java/DSA (Strings, Collections), Selenium waits/handles, TestNG, REST Assured, SQL joins | 45–60 min | Can you code live and debug flaky tests? |
-| 4. Technical R2 – Framework deep-dive | Framework architecture you built, POM/BDD, CI/CD (Jenkins/Azure), parallelization, defect triage, performance basics | 45–60 min | Senior signal: design decisions, scalability, metrics |
-| 5. Managerial + Behavioral / Partner | Leadership, estimation, stakeholder handling, Deloitte values, situational judgment | 30–45 min | Client-readiness + ownership |
-
-### Strategy per round
-
-- **R1–R2:** Emphasize live coding fluency (Java 8+, locators, waits), API + DB validation, and one framework story end-to-end. Avoid tool-listing without depth; always add *why* (e.g., why FluentWait over sleep, why RestAssured over Postman for CI).
-- **R3–R4 (Deep-dive):** Emphasize architecture diagram, parallel execution, reporting (Extent/Allure), and quality metrics (flaky-rate, coverage). Avoid blaming devs/QA; show triage process and prevention.
-- **Managerial:** Emphasize Agile ceremonies, effort estimation, mentoring juniors, and a conflict-resolution STAR story. Avoid salary/role negotiation here — redirect to HR.
-
-### Time allocation tip
-
-Split prep **40% Technical R1 (coding + Selenium/API live practice), 35% Framework deep-dive (your project story + CI/CD), 15% Managerial STAR stories, 10% HR pitch + Deloitte research**. In each answer, use 60/30/10: 60% solution, 30% trade-off, 10% result/metric.
+### Answering Strategy: The 60 / 30 / 10 Delivery Rule
+Whenever answering a technical or architectural question, divide your verbal response into three deliberate phases:
+1. **60% — Engineering Solution**: Direct, technically precise explanation using exact terminology (protocols, memory states, concurrency models).
+2. **30% — Trade-offs & Constraints**: Why you chose this approach over alternatives (e.g., *Playwright fixtures vs `beforeEach`*, *API seeding vs UI setup*, *`ThreadLocal` vs synchronization*).
+3. **10% — Business & Scale Outcome**: Concrete metric impact (*"This reduced suite runtime by 68% and eliminated 99% of data collisions across 16 parallel workers"*).
 
 ---
 
 ## 0.4 Technical vs Scenario-Based Questions
 
-**How to distinguish:** Technical Qs test *knowledge* — `workers vs sharding`, `retry logic`, `Page Object vs fixtures`. They want a precise definition + command/config. Scenario Qs test *judgment* — "suite was green, now 12% flaky under release pressure, what do you do?" They want triage under constraints, not a textbook answer.
+### 1. Technical Questions (Testing Depth & Mechanics)
+- **Goal**: Evaluates whether you truly understand the engine or merely memorized syntax.
+- **Delivery Pattern**:
+  1. *One-Sentence Architectural Definition*.
+  2. *Under-the-Hood Mechanics* (network packets, memory allocation, DOM lifecycle).
+  3. *Enterprise Scale Caveat / Gotcha*.
 
-**Answer structures:**
-- *Technical:* Definition in 1 line → concrete syntax/config → constraint/trade-off. E.g. "Sharding splits tests across CI runners (`--shard=1/4`); workers parallelize within one runner. Total parallelism = shards × workers; limit workers by CPU/RAM."
-- *Scenario:* Clarify scope → Triage (reproduce, isolate, quarantine) → Root-cause categories (test, data, infra, app) → Fix + prevention with metrics. Always quote numbers: flake rate, runtime, retries.
-
-**3 Example scenarios + skeletons:**
-
-1. *"Test passes locally, fails 1-in-8 in CI — how do you handle it?"* Check history/traces to confirm flakiness, quarantine + file ticket so main stays green. Then classify: async wait, shared state, or infra drift; fix with auto-wait/locator, isolated test data, track retry rate.
-2. *"Tests pass serially but fail with 4 workers — why?"* Suspect shared state: same user/data, global token, file/DB collision. Fix: each test creates/owns its data (API setup + teardown), remove order dependencies, add tagging to separate stateful/slow tests.
-3. *"800-test suite takes 90 min — scale it without losing signal?"* Profile first, then split: API for setup + critical-path UI only, shard across runners + merge blob reports. Add flake-detection pipeline (per-test failure rate over rolling 14d) with auto-quarantine and <2% flake SLO.
-
-**Common mistake:** Reciting definitions ("flaky means unstable") vs showing triage. Seniors must narrate: *signal protection first, root cause second, systemic prevention third* — quarantine, isolate, measure, then fix.
+#### Verbal Example: *"Why do you prefer Web-First Assertions over generic assertions?"*
+> *"Generic assertions like Jest `expect(await page.isVisible())` take a static boolean snapshot at one millisecond in time; if the element is mid-transition or re-rendering via React, it immediately fails without retrying. Web-first assertions like Playwright's `await expect(locator).toBeVisible()` invert this control: they continuously poll the DOM, re-evaluating the locator and actionability criteria until the expectation passes or the timeout expires (default 5s). This single architectural shift eliminates arbitrary `sleep()` statements and removes ~80% of timing flakiness in single-page applications."*
 
 ---
 
-## 0.5 Project Deep-Dive Strategy
+### 2. Scenario Questions (Testing Judgment & Triage)
+- **Goal**: Evaluates your composure and systematic troubleshooting when production or releases are on the line.
+- **The SIRH Framework**:
+  - **S — Signal & Quarantine**: How do you contain the failure immediately so the team isn't blocked?
+  - **I — Isolate & Reproduce**: How do you separate test code, application code, test data, and infrastructure?
+  - **R — Remediate**: What is the architectural fix (not just a band-aid)?
+  - **H — Harden & Prevent**: What automated guardrail (linter, rule, gate) guarantees this never recurs?
 
-Pick **one** Playwright + TypeScript project you owned end-to-end. Deloitte Senior SDET deep-dive tests ownership, architecture reasoning, and quantified impact — not tool listing.
+#### Scenario Triage Playbook: *"Your test passes locally on Mac but fails 20% of the time in headless Linux CI. Walk me through your triage."*
 
-**5-Minute Narrative Template (C-A-S-C-I):**
+```
+                             [CI FAILURE SIGNAL]
+                                      │
+                 ┌────────────────────┴────────────────────┐
+                 ▼                                         ▼
+         [1. INFRA / DISPLAY]                      [2. TIMING / ASYNC]
+     • Viewport mismatch (headless              • Slower CI CPU causing race
+       defaults to 1280x720)                    • Font rendering / layout shifts
+     • Missing system fonts (Linux)             • Action before network response
+                 │                                         │
+                 ▼                                         ▼
+     Set viewport: 1920x1080                   Use Web-First assertions
+     Install fonts in Dockerfile               Inspect Playwright trace.zip
+                 │                                         │
+                 └────────────────────┬────────────────────┘
+                                      ▼
+                           [3. DATA / CONCURRENCY]
+                       • Shared user account colliding across parallel shards
+                       • Solution: Worker-scoped UUID test data
+```
 
-1.  **Context (45s):** Business problem + your role. *E.g., "Regression for claims portal took 3 days manual; I owned automation for 4 scrum teams as SDET lead."*
-2.  **Architecture (90s):** Draw it verbally: `Playwright + POM + fixtures -> API helpers (Axios) -> Test data (Faker/DB seeds) -> CI (Jenkins/GitHub Actions, sharded) -> Reports (Allure + Teams/Slack)`. Call out design choices: POM vs. App Actions, `storageState` for auth, env-based `playwright.config.ts`, parallel workers + retries.
-3.  **Scale (45s):** Quantify: apps, envs, browsers, integrations.
-4.  **Challenge (60s):** One hard problem + root cause + fix. *E.g., "35% flake from dynamic locators + shared env data → moved to `getByRole`, auto-wait, isolated API-seeded data + tagged smoke/regression."*
-5.  **Impact (30s):** Before → After with numbers + lesson.
-
-**Metrics to Quote (have 4-5 ready):**
-* Suite size: `# specs / # tests, % API vs UI vs contract`
-* Runtime: `e.g., 4h serial → 25 min on 8 shards in CI`
-* Flake rate: `e.g., 30% → <2% over 30 runs` + quarantine policy
-* Coverage / Quality: `% regression automated, defect escape rate, MTTR, P1 leakage`
-* Efficiency: `manual effort saved (hrs/sprint), CI pass rate >95%`
-
-**Follow-up Traps to Prepare:**
-* "Why Playwright over Selenium/Cypress?" → auto-wait, tracing, network interception, multi-tab/API in one runner.
-* "How do you handle flaky tests?" → quarantine, retry with evidence (trace/video), root-cause buckets, delete don't ignore.
-* "Parallel + data collision?" → unique users per worker, API setup/teardown, no shared state.
-* "What would you do for 10x scale?" → sharding + container grid, contract tests to cut E2E, visual + accessibility layer, SLI: pipeline duration / flake budget.
+**Verbal Script for Interview**:
+> *"I follow a 4-step triage methodology:*
+> 1. *First, I don't guess—I retrieve the Playwright `trace.zip` or Selenium video/logs recorded on failure from CI artifacts. In Trace Viewer, I inspect the exact action, DOM snapshot, console errors, and network waterfall at the point of failure.*
+> 2. *I check for Environment Disparities: Local machines are fast and headed; CI runners (e.g. GitHub Actions Linux VMs) have restricted vCPUs (2 cores), slower disk I/O, and default to 1280x720 headless viewports, which frequently causes responsive menus to collapse into hamburger buttons. I ensure CI runs at 1920x1080 and pins OS font packages.*
+> 3. *I verify Concurrency & Data Isolation: If tests run with 4 workers in CI, tests that passed serially locally might be colliding on shared database records or user logins. I ensure every test derives its data from `workerIndex` or UUIDs.*
+> 4. *Once root cause is identified (e.g., element hidden behind an animation), I fix it with an auto-retrying web-first locator and add a lint rule banning `waitForTimeout` or hard sleeps across the repo."*
 
 ---
 
-## 0.6 Coding-Round Strategy
+## 0.5 Project Deep-Dive Strategy (The C-A-S-C-I Master Narrative)
 
-Deloitte Senior SDET coding rounds are typically 1-2 Java problems in 30-45 mins on strings, arrays, and HashMap logic — not hard LeetCode, but clean code + Big-O narration under pressure.
+In Round 3 and Round 4, you will be asked: *"Walk me through the test automation framework you built in your most recent project."* 
+Use the **C-A-S-C-I** narrative (Context $\to$ Architecture $\to$ Scale $\to$ Challenge $\to$ Impact).
 
-### Problem-Solving Framework: C-E-B-O-T
+### 1. Spoken 2-Minute Elevator Pitch
+> *"In my recent engagement with a major digital banking and financial services platform, I served as the Senior Automation Architect owning the test engineering workstream across 4 agile pods.*
+> 
+> *When I joined, the team was burdened by a 4-hour manual regression suite and an inherited legacy Selenium Java framework that suffered from a 22% flakiness rate in CI, causing developers to completely ignore pipeline red builds.*
+> 
+> *I designed and delivered a greenfield, hybrid automation ecosystem using **Playwright with TypeScript** for modern web channels, coupled with **REST Assured / Axios API clients** for fast state hydration, and containerized **PostgreSQL** verification hooks. Architecturally, we enforced strict layer separation: raw locators and browser interactions were strictly encapsulated inside Page and Component objects; business actions returned immutable representations; and test classes only expressed user intent and assertions.*
+> 
+> *To scale this, we integrated our suite into **GitHub Actions** with 8-way matrix sharding, pre-authenticated test contexts using `storageState`, and API-based test data factories that generated dynamic users per worker. 
+> 
+> *The biggest architectural hurdle was handling third-party payment gateway callbacks and WebSocket notifications without introducing hard waits. We solved this by implementing network route interception and mock fallbacks for external dependencies while polling internal Kafka events using event listener fixtures.*
+> 
+> *As a result, we compressed our total regression cycle from **4 hours down to 11 minutes**, dropped our flaky test rate from **22% to under 1.5%**, and accelerated release velocity from monthly drops to twice-weekly on-demand production deployments with zero P1 defect escapes across three quarters."*
 
-1. **Clarify (2 mins):** Restate the problem. Ask: input size? null/empty allowed? case-sensitive? sorted? duplicates? mutable? Confirm examples.
-2. **Edge Cases:** List null, empty, single element, all duplicates, large n, special chars. State how you will handle them.
-3. **Brute Force First:** State naive solution explicitly. E.g., "Brute is nested loops, O(n²) time, O(1) space." Code it mentally but don't write yet.
-4. **Optimize:** Identify bottleneck — repeated lookup? re-scanning? Replace with HashMap/Set or two-pointers/sliding window. State new complexity before coding.
-5. **Test Dry-Run:** Trace with 2 examples: happy path + edge case. Check off-by-one, NPE, integer overflow.
+---
 
-### How to Narrate Big-O and Trade-offs Aloud
+### 2. Framework Architectural Whiteboard Diagram
+When asked to whiteboard your architecture, sketch this exact multi-tiered diagram:
 
-> "I'll use a HashMap to store char counts — that trades O(n) space for O(n) time instead of O(n²). For 10^5 inputs that's worth it; for embedded/low-memory I'd sort in O(n log n) with O(1) space."
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             TEST SUITE LAYER                                │
+│   Feature Specs (e.g. checkout.spec.ts, payment-flow.spec.ts)               │
+│   • Zero raw locators   • Declarative AAA pattern   • Web-First Assertions  │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ calls
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                    PAGE & COMPONENT OBJECT LAYER (POM/COM)                  │
+│   • Scoped Locators (`getByRole`, `getByTestId`)                            │
+│   • Business Workflows (`loginAsUser`, `completeCheckout`)                  │
+│   • Reusable Components (HeaderNav, DataGrid, ModalDialog)                  │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ uses
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                       CORE FRAMEWORK ENGINE LAYER                           │
+│   • Fixture Injection (`test.extend`) • Session Auth (`storageState`)       │
+│   • API Client Engine (Axios/Request) • Database Client (pg/TypeORM)        │
+│   • Network Route Mockers             • Environment Config (`.env`/dotenv) │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ produces / reports
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                      EXECUTION & OBSERVABILITY INFRA                        │
+│   • Matrix Sharded CI (GitHub Actions / Jenkins Pipeline)                   │
+│   • Docker Container Runners          • Trace Viewer (`trace.zip`)          │
+│   • Allure / Playwright HTML Reports  • Slack / Teams Failure Webhooks      │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-Always state: time, space, why this trade-off fits test-automation scale (large logs, datasets). If asked to improve, name the alternative and when you'd pick it.
+---
 
-### 3 Frequent SDET Coding Patterns to Master
+## 0.6 Coding-Round Strategy (The C-E-B-O-T System)
 
-1. **HashMap Frequency Counting:** Two Sum, valid anagram, first non-repeating char, duplicate detection, group anagrams. Know `getOrDefault()`, `merge()`. Core for log/data validation problems.
-2. **Two-Pointers + Sliding Window:** Reverse string/array in-place, palindrome check, remove duplicates from sorted array, longest substring without repeats, container / pair sum in sorted array. Master `left/right` movement and while-condition.
-3. **String/Array Parsing & Manipulation:** Reverse words, compress string, missing number, rotate array, second largest, count vowels/consonants. Practice `StringBuilder`, `toCharArray()`, in-place swaps, null/empty guards. Write JUnit-style test inputs without prompting.
+During the live coding round, interviewers evaluate your **problem-solving hygiene, edge-case vigilance, and verbal reasoning**, not just working code.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        C-E-B-O-T CODING PROTOCOL                        │
+│                                                                         │
+│  [C] CLARIFY      Ask input constraints, null policy, scale (2 min)     │
+│  [E] EDGE CASES   List empty, single, duplicates, overflow (1 min)      │
+│  [B] BRUTE FORCE  State naive O(N²) approach aloud before coding (1 min)│
+│  [O] OPTIMIZE     Identify bottleneck; state optimal O(N) data structure│
+│  [T] TEST DRY-RUN Trace sample input with pointers before saying "done" │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Verbal Script for Narrating Big-O & Trade-Offs
+> *"To solve this problem of finding the first non-repeating character in a string:*
+> - *The **brute force approach** is to run nested loops comparing every character against all others, which yields $O(N^2)$ time complexity and $O(1)$ space complexity.*
+> - *To **optimize this for enterprise scale** (e.g., parsing large server log streams), we can trade space for time. We can use a single pass with an integer array of size 26 or a LinkedHashMap to store frequencies and preserve insertion order.*
+> - *This optimizes time complexity to $O(N)$ with $O(1)$ auxiliary space (since the alphabet size is bounded to 26/128 characters). Let me write this out with null and empty string guardrails first."*
 
 ---
 
 ## 0.7 Automation Architecture Strategy
 
-**How to whiteboard it (5-min draw — top-down, left to right):**
+### The 4 Non-Negotiable Architectural Rules
+1. **The Downward-Only Dependency Rule**:
+   - `Tests` depend on `Pages/Components`.
+   - `Pages/Components` depend on `Core Framework Utilities`.
+   - `Core Framework Utilities` depend on the underlying driver (`Playwright` / `WebDriver`).
+   - **Crucial**: Infrastructure layers NEVER depend on test cases. Tests NEVER bypass Pages to execute raw driver commands.
+2. **Zero Assertions in Page Objects**:
+   - Page Objects represent the *state and actions* of the system under test; they must return data, locators, or new Page Objects.
+   - Assertions belong exclusively inside the test methods (`spec.ts` or `@Test`). Putting assertions inside Page Objects prevents reusability across positive, negative, and exploratory test flows.
+3. **Stateless Test Isolation**:
+   - Tests must be completely hermetic. Test A must never rely on data generated by Test B.
+   - Every test must establish its own preconditions via fast API endpoints or isolated fixtures and clean up its state on teardown.
+4. **Thread-Safe Driver & Context Lifecycle**:
+   - **In Selenium/Java**: You must encapsulate WebDriver inside a `ThreadLocal<WebDriver>` and explicitly call `tlDriver.remove()` inside `@AfterMethod` to avoid thread pool memory leaks in long-running CI runners.
+   - **In Playwright**: You must leverage built-in worker process boundaries and ephemeral `BrowserContext` fixtures instead of creating global browser singletons.
+
+---
+
+## 0.8 Behavioral & Leadership Questions (Consulting Context)
+
+Deloitte scores candidates on **Client Leadership, Delivery Ownership, and Integrity**.
+
+### 1. Disagreement with Developer on Defect Severity
+- **Question**: *"A developer rejects your P1 defect, claiming it is an edge case that users won't hit. How do you handle it?"*
+- **What Evaluator Scores**: Objective data over emotion; customer and business risk framing.
+- **Spoken Script**:
+  > *"I never turn defect triage into a subjective debate. First, I verify reproducibility by attaching complete evidence: network logs, payload payloads, browser console logs, and step-by-step video. Next, I review production telemetry and user analytics (e.g., Datadog or Google Analytics) to show the actual percentage of users utilizing that specific browser or checkout flow. If the business impact represents revenue loss or compliance breach, I schedule a 10-minute sync with the Developer and Product Owner, framing the decision around risk acceptance: 'If we ship with this defect, here is the quantified exposure ($X revenue / Y users). Does the business accept this risk, or should we patch it?' The Product Owner makes the business call, and our engineering partnership remains collaborative and respectful."*
+
+### 2. Pushing Back on Unrealistic Client Deadlines
+- **Question**: *"The client demands 100% automation of 500 complex test cases in 2 weeks. How do you respond?"*
+- **What Evaluator Scores**: Consulting maturity, scope negotiation, risk management.
+- **Spoken Script**:
+  > *"I don't simply say 'no'; I present an evidence-based roadmap. I explain that rushing 500 automated tests in two weeks leads to brittle, unmaintainable scripts that fail constantly, destroying confidence in the automation suite. Instead, I conduct a Risk-Based Coverage Analysis:
+  > - We identify the top 20% of critical revenue and security paths (the smoke suite of ~40-50 tests) and automate those immediately with enterprise-grade stability.
+  > - We leverage API automation for the underlying business logic, which delivers 5x faster coverage than UI automation.
+  > - We build a transparent 6-week burn-down chart showing prioritized, phased automation deliverables. The client gets reliable, high-ROI quality gates immediately without inheriting technical debt."*
+
+---
+
+## 0.9 STARI Answer Structure
+
+For behavioral questions, structure every response using **STARI** (Situation $\to$ Task $\to$ Action $\to$ Result $\to$ Insight) and deliver it in under **90 seconds**:
+
 ```
-[Test Layer: TestNG/JUnit + Cucumber/REST]
-   ↓ calls
-[Business/Page Layer: POM Page Objects + API Clients + Reusable Flows]
-   ↓ uses
-[Core Framework: DriverFactory(ThreadLocal) | ConfigReader | WaitUtils | TestDataFactory | Logger]
-   ↓ produces
-[Support Infra: Extent/Allure Report + Screenshots/Videos → Jenkins/GitHub Actions → Selenium Grid / Docker / Cloud]
+0s ──────── 15s ──────── 30s ──────────────────────── 70s ──────── 85s ──── 90s
+│ Situation  │   Task    │         Action             │   Result   │ Insight│
+│ Context,   │   Your    │ 3 technical & leadership   │ Numbers,   │ Lasting│
+│ scale &    │ specific  │ steps (what you did, how   │ metrics,   │ impact │
+│ stakes     │ ownership │ you led, why it worked)    │ %, $, time │ & rule │
 ```
 
-**Narration script (60 sec):** "Tests contain zero locators or driver calls. Page/API layer encapsulates locators and actions. Core handles cross-cutting concerns. Infra handles parallel execution and reporting. Config via `.properties/.yaml + env vars` for env/browser/grid URL — no hardcoding."
-
-**Key talking points:**
-* **Isolation:** Stateless, independent tests — own setup/teardown via `@Before/AfterMethod`, unique test data per run (Faker/API-seeded DB, no shared users), no order dependency, retry only on infra flakes.
-* **Thread-safety:** `private static ThreadLocal<WebDriver> tl = new ThreadLocal<>()`; Factory does `create() → get() → quit()+remove()`. Forgetting `remove()` leaks dead sessions on thread-pool reuse. Pair with `parallel="methods" thread-count=6` matched to agent cores.
-* **Scale to 5000+:** Shard by historical duration (not alphabetically) across CI matrix/Docker agents; Selenium Grid auto-scale; merge Allure/ReportPortal dashboards; tag `@smoke/@regression/@flaky` for selective runs; fail-fast + quarantine flaky bucket.
-
-**Trade-off Qs to invite (shows Senior thinking):**
-* "I used classic POM over PageFactory — `@FindBy` + implicit caching causes `StaleElementException`; do you want me to contrast with Screenplay for >5k tests?"
-* "Monorepo vs multi-repo for framework + tests? I prefer versioned core lib + per-service test repos for independent CI."
-
----
-
-## 0.8 Behavioral / Leadership Questions
-
-Deloitte Senior SDET behavioral rounds test **consulting leadership**: influence without authority, client empathy, and quality ownership under delivery pressure. Expect STAR format, 2–3 min per answer with metrics.
-
-### Top 6 Themes + What Evaluator Scores
-
-**1. Mentoring / Growing QA talent**
-*Q: "Tell me about mentoring a junior who struggled with automation."*
-Scores: coaching structure, delegation, measurable uplift (e.g., PR rejection rate down 40%).
-Anti-pattern: *"I just fixed their code myself to save time."*
-
-**2. Conflict with dev on defect validity / severity**
-*Q: "Dev rejected your P1 bug — what did you do?"*
-Scores: data-driven persuasion (logs, repro, impact), respect for engineering, win-win resolution.
-Anti-pattern: *"I escalated to the manager immediately."*
-
-**3. Tight deadline / release-at-risk call**
-*Q: "Describe pushing back on a release under deadline pressure."*
-Scores: risk quantification, options offered (scope cut vs. hotfix plan), client-first judgment.
-Anti-pattern: *"We tested overnight and hoped for the best."*
-
-**4. Quality advocacy / Shift-left influence**
-*Q: "How did you improve quality in a team that neglected testing?"*
-Scores: systemic change (CI gates, contract tests, DoD), adoption metrics, persistence.
-Anti-pattern: *"I complained quality was not my fault."*
-
-**5. Client / stakeholder communication**
-*Q: "Explain a complex quality risk to a non-technical client."*
-Scores: clarity, business-impact framing ($, SLA, UX), trust built.
-Anti-pattern: *"I sent them the stack trace and test report."*
-
-**6. Failure / Escaped defect ownership**
-*Q: "Tell me about a bug that escaped to prod on your watch."*
-Scores: accountability, RCA + preventive action (missing coverage, alerting), no blame.
-Anti-pattern: *"It was a dev / requirements issue, not QA."*
-
-### Leadership-Without-Authority Framing (Consulting Context)
-- **Frame as advisor, not owner:** "As embedded QA in client pod, I had no direct authority over devs, so I led via..."
-- **Anchor to client value:** tie every action to velocity, cost of rework, or CSAT — Deloitte scores business impact over test counts.
-- **Show enablement:** templates, guild sessions, and self-serve pipelines beat heroics.
+### Complete STARI Model: The Flaky Suite Recovery Story
+- **Situation (15s)**: *"At my previous engagement, our 1,200-test regression suite had deteriorated to an 18% flaky failure rate in CI. The engineering team had lost complete trust in the pipeline, and developers routinely clicked 'Re-run' 3 to 4 times until builds passed."*
+- **Task (15s)**: *"As the Senior SDET Lead, I took full ownership of recovering pipeline integrity, reducing flakiness below 2%, and establishing a strict quality gate within 30 days."*
+- **Action (40s)**: 
+  1. *"First, I implemented an automated **Flaky Quarantine Pipeline**: any test failing intermittently across consecutive runs was tagged `@quarantine` and routed to a non-blocking diagnostic job with full video and trace capture, keeping the main PR build green."*
+  2. *"Second, I clustered the root causes: 60% were due to shared test data collisions across parallel workers, 30% were race conditions on dynamic SPA elements, and 10% were third-party API timeouts. I replaced all shared database seeds with UUID-based API factories and refactored brittle assertions to Playwright web-first auto-retrying matchers."*
+  3. *"Third, I instituted a team-wide 'Flakiness Budget' SLO: no squad could merge new features if their module's flake rate exceeded 2%."*
+- **Result (15s)**: *"Within four weeks, our flaky test rate dropped from **18% to 1.1%**. CI build runtimes decreased from **55 minutes to 14 minutes**, developer re-runs fell to zero, and the team saved an estimated 120 engineering hours per month."*
+- **Insight (5s)**: *"I learned that test flakiness is primarily an architectural and governance problem, not a timing problem. Enforcing strict data isolation and quarantine budgets is the only way to sustain long-term pipeline trust."*
 
 ---
 
-## 0.9 STAR Answer Structure
+## 0.10 Strategic Questions to Ask the Interviewer
 
-Use **STARI** (Situation-Task-Action-Result-Insight) for all Deloitte Senior SDET behavioral answers. Keep to **90 seconds**, end with metrics.
+Always close the interview with strategic, high-value questions that position you as an architectural leader:
 
-### SDET-Tuned STARI Template
+### For Technical Panelists / SDET Leads
+1. *"How do you currently handle test data management and environment teardown across parallel CI runs—do you rely on ephemeral containerized databases, API seeding, or dedicated staging databases?"*
+2. *"What does your flakiness triage workflow look like today? Do you have an automated quarantine pipeline with an SLA, or are flaky tests addressed ad-hoc during release cycles?"*
+3. *"What is the current distribution in your test pyramid between unit, API contract, and end-to-end UI tests, and where is the biggest strategic gap you are looking to close?"*
 
-- **S — Situation (15s):** 1-2 sentences. System + scale + stakes. *e.g., "Playwright suite, 800 tests, 3 teams, release blocked."*
-- **T — Task (15s):** Your ownership. *e.g., "I owned reducing flakiness and CI time without losing coverage."*
-- **A — Action (35s):** 3 steps max, technical + leadership. Tools, root-cause, process change. *e.g., "Quarantined flakes, replaced sleeps with web-first assertions, sharded workers, added trace-on-retry + dashboard."*
-- **R — Result (20s):** Quantify with **scale/cost metrics**: flaky % → %, p90 runtime min → min, MTTR, defects escaped, infra cost / developer-hours saved. *e.g., "Flaky 12%→1.5%, p90 45→18 min."*
-- **I — Insight (5s):** Transferable principle. *e.g., "Now I gate merges on flaky-budget and auto-quarantine."*
+### For Engineering Managers / Delivery Leads
+4. *"What is the expectation around Definition of Done and testability—do developers actively collaborate on adding stable test locators (`data-testid`) and writing integration tests, or does the SDET workstream operate after code freeze?"*
+5. *"What does success look like for this Senior SDET role in the first 90 days? What measurable outcomes or delivery milestones will prove that this hire was a success?"*
 
-> Formula: *I did X by doing Y, measured by Z.*
-
-### 90-Second Timing Guide
-
-| 0-15s | 15-30s | 30-65s | 65-85s | 85-90s |
-|---|---|---|---|---|
-| S | T | A (what + why) | R (numbers) | I |
-| Don't ramble context | State responsibility | No tool list dump | 2-3 metrics min | Link to Deloitte value |
-
-If interrupted: skip to R.
-
-### Mini Example Outline — Flaky-Test Story
-
-- **S:** E-commerce checkout suite, 500 Playwright tests, 20% nightly failures, team ignoring signals.
-- **T:** Cut noise to restore trust before peak release.
-- **A:** (1) Tagged + quarantined top-20 flakes via retry analytics (2) Fixed root causes: race conditions, test-data collision, missing network-idle waits (3) Added flaky-budget gate + Slack report + owner rotation.
-- **R:** Flaky 20%→2% in 3 weeks, true bugs found +6, CI p90 38→16 min, unblocked daily releases.
-- **I:** Flakiness is a process problem — visibility + ownership beats reruns.
-
----
-
-## 0.10 Questions to Ask the Interviewer
-
-> Always close with 2-3 questions — it signals ownership, not just test execution.
-
-**For Technical Lead / SDET Panel**
-
-1. **How do you triage flaky tests today — quarantine policy, retry budget, and who owns the fix?**
-   *Why:* Shows you protect pipeline trust instead of normalizing re-runs.
-2. **What does the CI pipeline look like — PR vs nightly gates, parallelization/sharding, and average E2E runtime?**
-   *Why:* Shows you optimize for fast feedback and quality gates, not just test count.
-3. **What is your test pyramid balance — % unit / API / UI — and where is the biggest gap?**
-   *Why:* Shows you think in risk-based strategy and cost-of-testing trade-offs.
-
-**For Engineering Manager**
-
-4. **Is quality owned by SDETs, shared with devs, or embedded — what is the SDET:dev ratio and on-call expectation?**
-   *Why:* Shows you probe team topology and accountability before committing.
-5. **What does success look like in 90 days — flake rate, coverage, release confidence — and what blocked the last person?**
-   *Why:* Shows you target measurable outcomes and learn from prior failures.
-6. **How are production defects fed back — do you track escaped-defect rate and do postmortems change test strategy?**
-   *Why:* Shows you close the quality loop beyond pre-release testing.
-
-**For HR / Hiring Manager**
-
-7. **What is the automation-first culture here — do devs write tests, and is testability part of Definition of Done?**
-   *Why:* Shows you value shift-left culture over a siloed QA team.
-8. **What is the growth path — Senior SDET to Lead/Architect — and what learning budget or client exposure does Deloitte offer?**
-   *Why:* Shows long-term intent and consulting mindset, not just offer-shopping.
+### For Partners / Practice Directors (Deloitte Leadership)
+6. *"How is Deloitte's Quality Engineering practice incorporating generative AI and agentic workflows into client test frameworks, and what opportunities exist to contribute to reusable CoE assets?"*
+7. *"On large enterprise transformation projects, how does your leadership team manage client expectations when legacy systems lack testability or API contracts?"*
 
 ---
 
 ## 0.11 Final Interview Checklist
 
-> Goal: walk in calm, tell one strong project story, prove framework + coding depth, close with senior-level questions.
+### 24 Hours Before Interview
+- [ ] Rehearse the **2-minute C-A-S-C-I project pitch** out loud until delivery is effortless.
+- [ ] Memorize your 5 core impact metrics: **Suite size (3,500)**, **Runtime (4h $\to$ 11m)**, **Flake rate (18% $\to$ 1.2%)**, **PR feedback (<10m)**, **Defect escapes (0 P1s)**.
+- [ ] Practice drawing the **4-tier Framework Architecture diagram** on a blank sheet of paper in under 3 minutes.
+- [ ] Warm up on live coding: String manipulation, HashMap frequency counting, and two-pointer arrays.
+- [ ] Review your resume line-by-line: Be prepared to defend every tool, library, and configuration mentioned.
 
-### 24h Before
-- [ ] Lock 2-min project story: Domain → Scale (tests, apps, envs) → Your role → Framework built → Impact (time, coverage, flakiness %, release confidence).
-- [ ] Redraw framework diagram from memory (Runner → Config → Pages/APIs → Utilities → Reporting → CI) in <5 min.
-- [ ] Coding warmup: String/API-hashmap, arrays/two-pointer, OOP + Selenium wait snippet, 1 REST-Assured + 1 Playwright script.
-- [ ] Prep 3 STAR stories: flaky-test fix, production bug caught, framework migration / CI integration.
-- [ ] Research interviewers on LinkedIn; prepare 3 role-specific questions.
+### 1 Hour Before Interview
+- [ ] Test screen share, audio, video, and IDE settings (VS Code / IntelliJ with dark theme and legible font size).
+- [ ] Open a blank scratchpad for taking notes on interviewer problem statements.
+- [ ] Keep water nearby and review your 3 STARI behavioral stories.
 
-### 1h Before
-- [ ] Test audio/video, screen-share, IDE + GitHub ready; keep water + notes handy.
-- [ ] Review resume line-by-line — every tool claimed must have a 30-sec example.
-- [ ] Rehearse metrics out loud: execution time before/after, parallelization, pass rate.
-
-### During
-- [ ] STAR + metrics for every behavioral answer; draw diagram when asked about framework.
-- [ ] Think aloud in coding: clarify → edge cases → brute force → optimize → test.
-- [ ] Ask clarifying questions for system design (scale, NFRs, environments, test data strategy).
-
-### Closing (Last 5 Min)
-- [ ] Ask: QA challenges in current sprint? Automation coverage vs. tech debt? Definition of success in 90 days?
-- [ ] Summarize fit in 30 sec + ask next steps and timeline.
-
-### Must-Carry Artifacts
-- **Metrics one-pager:** suite size, runtime, flake rate, coverage, defects leaked.
-- **Diagrams:** framework architecture, CI/CD pipeline, defect lifecycle.
-- **Code links:** GitHub (framework core, custom utils, API + UI samples), sanitized reports (Allure/Extent).
+### During the Interview
+- [ ] Use the **60 / 30 / 10 rule** on technical questions.
+- [ ] Never jump straight into code: apply **C-E-B-O-T** (Clarify $\to$ Edge Cases $\to$ Brute Force $\to$ Optimize $\to$ Test).
+- [ ] On framework design, prioritize **state isolation, thread safety, and maintenance costs** over syntax tricks.
 
 ---
 
-## 0.12 Current Baseline and Gaps
+## 0.12 Current Baseline & 14-Day Remediation Roadmap
 
-Rate 1=aware, 3=project-ready, 5=can teach / design. Fill evidence column before interview.
+Rate your mastery honestly from 1 to 5 (1 = Aware, 3 = Project Proficient, 5 = Can Architect & Teach):
 
-| Skill | Score (1-5) | Evidence | Deloitte Senior Bar | Gap → Action |
-|---|---|---|---|---|
-| Java (OOP, exceptions) |  | e.g., POM + utils built | Clean OOP, SOLID, handles edge cases live |  |
-| Collections |  | e.g., Map for test data, Set for dedup | Chooses optimal structure + states Big-O |  |
-| Selenium |  | e.g., waits, frames, windows | Flaky-proof waits, framework design |  |
-| TestNG |  | e.g., parallel, listeners, retry | Custom listener + parallel strategy |  |
-| API (RestAssured) |  | e.g., GET/POST, auth, schema check | Auth, chaining, negative + contract tests |  |
-| Playwright (TS) |  | e.g., locators, fixtures | Auto-wait, tracing, API+UI in one run |  |
-| CI/CD (Jenkins/GitHub) |  | e.g., ran pipeline, reports | Designs pipeline, parallel + env strategy |  |
-| SQL |  | e.g., joins, validation queries | Joins + aggregations for test validation |  |
-| Debugging / RCA |  | e.g., logs, root-caused flake | Structured RCA: logs → repro → fix → guardrail |  |
-| Leadership / Mentoring |  | e.g., reviews, onboarding | Reviews, estimation, stakeholder pushback |  |
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                    14-DAY SENIOR SDET SPRINT PLAN                      │
+├─────────────────┬──────────────────────────────────────────────────────┤
+│ Days 1 – 3      │ Core Java, Memory Layouts, Collections & Concurrency │
+│ Days 4 – 6      │ Playwright & TypeScript Architecture Deep Dive       │
+│ Days 7 – 8      │ REST Assured, API Client Design & Contract Testing   │
+│ Days 9 – 10     │ CI/CD Pipelines, Matrix Sharding & Docker Runners    │
+│ Days 11 – 12    │ Complex SQL Queries, Window Functions & DB Testing   │
+│ Days 13 – 14    │ Full Mock Loops: Architecture Whiteboarding & STARI  │
+└─────────────────┴──────────────────────────────────────────────────────┘
+```
 
-**Turn gaps into 2-week plan:**
-1. Pick 2 lowest scores only — e.g., Playwright (2→3) + SQL (3→4).
-2. Week 1: 30 min/day code reps — 5 Playwright locator/trace labs + 10 SQL joins on sample DB.
-3. Week 2: Build proof — push 1 Playwright PR with trace + 1 API+DB validation test to GitHub; add links to resume.
-4. Daily: 1 mock Q per gap, STAR format, 2-min limit. Re-score Friday; stop at 3+, don't chase 5.
-
-**Honest gap-framing line:**
-> "My depth is Selenium+Java+API; Playwright TypeScript is at 3 — I've built fixtures and trace-enabled suites, and I'm closing to Senior bar with a 2-week shipping plan."
+| Technical Domain | Self Score (1–5) | Senior Interview Bar | Immediate Action Item |
+| :--- | :---: | :--- | :--- |
+| **Java Foundations & OOP** | `[ ]` | Explain JVM Stack/Heap, ClassLoaders, GC algorithms, SOLID in automation. | Review Section 1, 2, and 3. |
+| **Collections & HashMap** | `[ ]` | Bitwise bucket index `(n-1)&hash`, treeification, Java 8 ConcurrentHashMap CAS. | Review Section 4 and 5. |
+| **Concurrency & Threading** | `[ ]` | `ThreadPoolExecutor` tuning, `ThreadLocal` lifecycle, race condition diagnosis. | Review Section 9. |
+| **Playwright & TypeScript** | `[ ]` | Auto-waiting mechanics, custom fixtures, network route mocking, storageState. | Review Section 19. |
+| **API & REST Assured** | `[ ]` | Request/Response specifications, POJO builders, OAuth2 caching, WireMock stubs. | Review Section 18 and 25. |
+| **CI/CD & DevOps** | `[ ]` | Multi-stage YAML, matrix sharding, artifact caching, flaky quarantine gates. | Review Section 21. |
+| **SQL & Data Persistence** | `[ ]` | Complex joins, window functions (`DENSE_RANK`), transaction rollbacks. | Review Section 24. |
+| **Framework Architecture** | `[ ]` | Clean separation of concerns, zero assertions in POM, downward-only dependencies. | Review Section 20 and 31. |
+| **Project Story & STARI** | `[ ]` | Flawless 2-minute elevator pitch with 5 quantifiable metrics. | Practice Section 0 and 34. |
