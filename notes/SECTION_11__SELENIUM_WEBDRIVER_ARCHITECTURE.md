@@ -285,3 +285,8 @@ services:
 > *"In Selenium 3, if 50 parallel tests requested sessions from a Grid with only 20 available browser slots, the Hub would immediately reject the excess 30 requests with `SessionNotCreatedException: No available slots`, failing 60% of the CI run.*
 > 
 > *In Selenium 4, the **Session Queue** microservice decouples incoming request ingestion from browser node capacity. When a burst occurs, the Router places new session requests into the Session Queue. The Distributor pulls requests only as Node slots become available upon test completion. Furthermore, we configure `session-request-timeout` (e.g. 300 seconds), allowing tests to wait gracefully in the queue during high-traffic spikes without failing the build."*
+
+---
+## 11.5 Anti-Patterns & Critical Pitfalls
+- **Ignoring W3C Protocol Overhead:** Opening separate HTTP connections for each element interaction in heavy loops.
+- **Driver Instantiation in Page Objects:** Instantiating `new ChromeDriver()` inside page object constructors.

@@ -240,3 +240,14 @@ public final class InvoiceTableComponent {
 > *This selects the `div.card` only if it contains an immediate primary button.*
 > 
 > *That said, for cross-browser testing in Selenium where older browser versions or specific automation engines might not support `:has()`, the industry standard for upward traversal remains **XPath with the `parent::` or `ancestor::` axes**."*
+
+---
+## 12.5 High-Stakes Triage Scenario & Resolution Playbook
+### Scenario Setup
+A test suite breaks for 300 tests after frontend updates CSS class names (`btn-primary-v2`).
+### Resolution Playbook
+Refactor locators to use `data-testid` attributes or semantic ARIA roles (`By.role("button", "Submit")`).
+
+---
+## 12.6 Anti-Patterns & Critical Pitfalls
+- **Brittle Absolute XPath:** Using `/html/body/div[2]/div[3]/button` which breaks on any DOM layout shift.

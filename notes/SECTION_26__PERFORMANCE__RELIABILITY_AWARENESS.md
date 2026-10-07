@@ -1,6 +1,6 @@
 # SECTION 26 — PERFORMANCE / RELIABILITY AWARENESS
 
-> **Purpose:** Low-level performance engineering mechanics, k6/JMeter scripting patterns, latency distributions (p95/p99), reliability testing, and suite execution optimization for Deloitte Senior SDET assessment.
+> **Purpose:** Low-level performance engineering mechanics, k6/JMeter scripting patterns, latency distributions (p95/p99), reliability testing, and suite execution optimization for Enterprise Senior SDET / Staff QA Architect assessment (Deloitte, Big 4, FAANG).
 
 ---
 

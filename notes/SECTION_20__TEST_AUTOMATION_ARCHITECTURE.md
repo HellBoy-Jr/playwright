@@ -1467,3 +1467,8 @@ jobs:
 > - Execution runtime reduced from **180 minutes to under 12 minutes**.
 > - Suite pass rate increased from **85% to 99.2%+**.
 > - The automation pipeline transitions from a deployment bottleneck into a reliable CI quality gate."
+
+---
+## 20.5 Anti-Patterns & Critical Pitfalls
+- **Tight Coupling:** Tests calling WebDriver methods directly without Page Object abstraction.
+- **Shared Static State:** Using static driver fields causing thread contention during parallel runs.

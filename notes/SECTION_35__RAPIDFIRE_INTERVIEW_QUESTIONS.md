@@ -1,6 +1,6 @@
 # SECTION 35 — RAPID-FIRE INTERVIEW QUESTIONS
 
-> **Purpose:** Dense, expert-level Q&A pairs designed for rapid review before a Deloitte Senior SDET interview. Each answer is technically precise, covering traps and gotchas that trip up senior engineers. Read aloud, quiz yourself, and time your answers to under 30 seconds per pair.
+> **Purpose:** Dense, expert-level Q&A pairs designed for rapid review before a Senior SDET & QA Architect interview (Deloitte, FAANG, Big 4). Each answer is technically precise, covering traps and gotchas that trip up senior engineers. Read aloud, quiz yourself, and time your answers to under 30 seconds per pair.
 
 ---
 

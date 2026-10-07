@@ -281,3 +281,7 @@ await expect(dashboardPage.statusBadge).toHaveText('Transaction Complete');
    - *Defense:* Embedded tests into blocking PR gates, provided zero-flakiness SLA (<0.4%), and attached actionable `trace.zip` artifacts allowing devs to replay failures locally in VSCode.
 5. **"What was your single biggest failure during this project and what did you learn?"**
    - *Defense:* Initially tried to migrate all 4,000 legacy UI tests 1:1. Realized 60% were redundant. Refactored strategy to follow the Test Pyramid—pushing 60% of checks down to fast API contract specs.
+
+---
+## 34.18 Anti-Patterns & Critical Pitfalls
+- **Migrating 1:1 Without Pyramid Review:** Migrating obsolete manual UI scripts instead of pushing 60% of assertions to fast API specs.

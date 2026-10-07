@@ -1,6 +1,6 @@
 # SECTION 36 — MOCK INTERVIEW SETS
 
-> **Purpose:** Structural evaluation suites and mock interview loops matching Deloitte Senior SDET assessment criteria. Designed to test technical depth, coding rigor, architectural problem solving, and behavioral alignment.
+> **Purpose:** Structural evaluation suites and mock interview loops matching Deloitte, Big 4, Tier-1 Tech, and FAANG Senior SDET assessment criteria. Designed to test technical depth, coding rigor, architectural problem solving, and behavioral alignment.
 
 ---
 
@@ -469,7 +469,7 @@ console.log(analyzeResponseTimes([120, 450, 800, 230, 990, 150, 450, 300]));
 
 ---
 
-### Deloitte Senior SDET Scoring Rubric
+### Enterprise Senior SDET / Staff QA Architect Scoring Rubric
 
 | Criterion | 1 - Unacceptable (Junior) | 3 - Satisfactory (Mid-Level) | 5 - Outstanding (Staff/Principal SDET) |
 |-----------|---------------------------|------------------------------|----------------────────────────────────|

@@ -462,3 +462,7 @@ export default defineConfig({
 // categories: product-defect vs env-flake; history: trend across runs
 ```
 Triage: huge artifacts → failure-only retention; history missing → Allure history directory persisted; flake invisible → retries categorized (passed/flaky/failed). Anti: HTML only (no history); no categories (all failures look same); infinite retention. Qs: What turns a report into release intelligence?
+
+---
+## 30.27 Anti-Patterns & Critical Pitfalls
+- **Hardcoding Credentials:** Storing API keys or passwords in code instead of HashiCorp Vault or environment variables.

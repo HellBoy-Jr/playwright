@@ -322,3 +322,55 @@ public class TestScheduler {
 - **Symptom**: Test runner hangs indefinitely on 8 parallel threads during token refresh.
 - **Root Cause**: Two different threads locked the same synchronized map while executing nested operations requiring another monitor lock in reverse order.
 - **Senior Resolution**: Replace `Collections.synchronizedMap` with `ConcurrentHashMap` and utilize atomic compute methods (`computeIfAbsent`, `merge`) instead of compound `if (!map.containsKey(k)) map.put(k, v)` blocks.
+
+---
+
+## 4.10 Exhaustive `java.util.Arrays` Method Master Reference
+
+| Method Signature | Return Type | Description & SDET Use Case | Time Complexity |
+|:---|:---:|:---|:---:|
+| `Arrays.sort(T[] a)` | `void` | Dual-Pivot Quicksort for primitives, Timsort for objects. | $O(N \log N)$ |
+| `Arrays.binarySearch(T[] a, T key)` | `int` | Binary search on sorted array; returns index or $-(insertionPoint) - 1$. | $O(\log N)$ |
+| `Arrays.asList(T... a)` | `List<T>` | Returns fixed-size list backed by specified array (mutation throws `UnsupportedOperationException`). | $O(1)$ |
+| `Arrays.copyOf(T[] original, int newLength)` | `T[]` | Copies array, truncating or padding with nulls/zeros. | $O(N)$ |
+| `Arrays.copyOfRange(T[] a, int from, int to)` | `T[]` | Copies specified range of array into a new array. | $O(K)$ |
+| `Arrays.equals(T[] a, T[] a2)` | `boolean` | Structural equality check of array elements. | $O(N)$ |
+| `Arrays.deepEquals(Object[] a1, Object[] a2)`| `boolean` | Deep structural equality check for multi-dimensional arrays. | $O(N)$ |
+| `Arrays.fill(T[] a, T val)` | `void` | Assigns specified value to each element of array. | $O(N)$ |
+| `Arrays.stream(T[] array)` | `Stream<T>` | Converts array into sequential Java 8 Stream. | $O(1)$ |
+| `Arrays.mismatch(T[] a, T[] b)` *(Java 9+)* | `int` | Finds index of first mismatch between two arrays, or -1. | $O(N)$ |
+| `System.arraycopy(src, sPos, dest, dPos, len)`| `void` | Native memory copy from source array to destination array. | $O(N)$ native |
+
+---
+
+## 4.11 Exhaustive `java.util.Collections` Method Master Reference
+
+| Method Signature | Return Type | Description & SDET Use Case | Time Complexity |
+|:---|:---:|:---|:---:|
+| `Collections.sort(List<T> list)` | `void` | Sorts list in ascending order using Timsort. | $O(N \log N)$ |
+| `Collections.binarySearch(List list, T key)` | `int` | Binary search on sorted List ($O(\log N)$ for RandomAccess, $O(N)$ for LinkedList). | $O(\log N)$ / $O(N)$ |
+| `Collections.reverse(List<?> list)` | `void` | Reverses order of elements in list. | $O(N)$ |
+| `Collections.shuffle(List<?> list)` | `void` | Randomly permutes elements in list (useful for test data randomization). | $O(N)$ |
+| `Collections.swap(List<?> list, int i, int j)`| `void` | Swaps elements at specified positions. | $O(1)$ |
+| `Collections.max(Collection<? extends T> coll)`| `T` | Returns maximum element according to natural order. | $O(N)$ |
+| `Collections.min(Collection<? extends T> coll)`| `T` | Returns minimum element according to natural order. | $O(N)$ |
+| `Collections.unmodifiableList(List<? extends T> list)` | `List<T>` | Returns unmodifiable view of specified list. | $O(1)$ |
+| `Collections.synchronizedList(List<T> list)` | `List<T>` | Returns synchronized (thread-safe) list wrapper. | $O(1)$ |
+| `Collections.frequency(Collection<?> c, Object o)`| `int` | Returns number of elements in collection equal to `o`. | $O(N)$ |
+| `Collections.disjoint(Collection<?> c1, Collection<?> c2)`| `boolean` | Returns `true` if two collections have no elements in common. | $O(N)$ |
+| `Collections.emptyList()` | `List<T>` | Returns immutable empty list (prevents `null` return anti-pattern). | $O(1)$ |
+
+---
+
+## 4.12 Exhaustive `java.util.Objects` Method Master Reference
+
+| Method Signature | Return Type | Description & SDET Use Case | Time Complexity |
+|:---|:---:|:---|:---:|
+| `Objects.equals(Object a, Object b)` | `boolean` | Null-safe equality check (`a == b \|\| (a != null && a.equals(b))`). | $O(1)$ / $O(N)$ |
+| `Objects.deepEquals(Object a, Object b)` | `boolean` | Null-safe deep structural equality check for nested objects/arrays. | $O(N)$ |
+| `Objects.hashCode(Object o)` | `int` | Null-safe hash code computation (`o == null ? 0 : o.hashCode()`). | $O(1)$ |
+| `Objects.hash(Object... values)` | `int` | Generates composite hash code for multiple fields. | $O(N)$ |
+| `Objects.requireNonNull(T obj, String msg)` | `T` | Checks non-nullity; throws `NullPointerException` with custom message. | $O(1)$ |
+| `Objects.requireNonNullElse(T obj, T defaultObj)`| `T` | Returns `obj` if non-null, else returns `defaultObj` (Java 9+). | $O(1)$ |
+| `Objects.isNull(Object obj)` | `boolean` | Returns `true` if reference is `null`. | $O(1)$ |
+| `Objects.nonNull(Object obj)` | `boolean` | Returns `true` if reference is non-null. | $O(1)$ |

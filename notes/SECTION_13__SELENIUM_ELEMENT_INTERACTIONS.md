@@ -249,3 +249,7 @@ public final class ResilientElementActions {
 > *When created with `{mode: 'closed'}`, the browser completely denies JavaScript and external tools access to the internal shadow root (`element.shadowRoot` returns `null`).
 > 
 > *To automate closed shadow roots, you must partner with development to switch the mode to `open` for test environments, or inject custom JavaScript shims during application build initialization."*
+
+---
+## 13.5 Enterprise Relevance at 5,000+ Test Scale
+Standardizing element interactions with dynamic retry wrappers prevents StaleElementReferenceExceptions across multi-threaded execution grids.

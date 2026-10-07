@@ -1,12 +1,12 @@
 # SECTION 33 — BEHAVIORAL AND LEADERSHIP
 
-> **Purpose:** Behavioral interview frameworks, STAR+ structured response models, leadership metrics, developer coaching stories, and consulting alignment tailored to Deloitte Senior SDET competency requirements.
+> **Purpose:** Behavioral interview frameworks, STAR+ structured response models, leadership metrics, developer coaching stories, and consulting alignment tailored to Senior SDET & Lead QA Architect competency (Deloitte, FAANG, Big 4) requirements.
 
 ---
 
-## 33.1 Deloitte Senior SDET Leadership Philosophy
+## 33.1 Enterprise Senior SDET / Staff QA Architect Leadership Philosophy
 
-At the Deloitte Senior SDET level, behavioral interviews evaluate **technical leadership, strategic influence, business alignment, and client advisory presence**. You are expected to demonstrate how you drive software quality as a business multiplier rather than a gatekeeping bottleneck.
+At the Enterprise Senior SDET / Staff QA Architect level, behavioral interviews evaluate **technical leadership, strategic influence, business alignment, and client advisory presence**. You are expected to demonstrate how you drive software quality as a business multiplier rather than a gatekeeping bottleneck.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -129,3 +129,12 @@ Upskill the manual QA team to independently write and maintain high-quality Play
 - **Blaming Developers or Environment:** Excusing flaky tests or production defects by blaming developers ("Devs wrote bad code") instead of discussing root-cause analysis and automated quality guardrails.
 - **Unquantified Claims:** Saying "We improved speed significantly" instead of "We reduced pipeline execution time by 64% from 35 mins to 12 mins."
 - **Over-focusing on Tooling:** Listing tool names without explaining architectural strategy or business ROI.
+
+---
+## 33.9 Production Code Reference
+```typescript
+// Automated PR Quality Gate Script
+if (flakeRate > 0.005) {
+  throw new Error("PR Gate Blocked: Flake SLA breach (> 0.5%)");
+}
+```

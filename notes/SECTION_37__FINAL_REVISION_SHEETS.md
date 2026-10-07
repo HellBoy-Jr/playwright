@@ -1,6 +1,6 @@
 # SECTION 37 — FINAL REVISION SHEETS
 
-> **Purpose:** Ultra-dense, scannable one-page reference sheets for last-minute review before a Deloitte Senior SDET interview. Each sheet is designed to be read in under 10 minutes and covers the most frequently tested, most commonly confused, and most senior-differentiating concepts in each domain.
+> **Purpose:** Ultra-dense, scannable one-page reference sheets for last-minute review before a Senior SDET & QA Architect interview (Deloitte, FAANG, Big 4). Each sheet is designed to be read in under 10 minutes and covers the most frequently tested, most commonly confused, and most senior-differentiating concepts in each domain.
 
 ---
 

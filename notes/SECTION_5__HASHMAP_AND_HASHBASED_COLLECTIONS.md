@@ -289,3 +289,24 @@ public class ConceptualHashSet<E> {
 }
 ```
 **Memory Consequence**: A `HashSet<E>` has the exact same memory overhead as a `HashMap<E, Object>`, allocating a full `Node` instance and retaining the dummy `PRESENT` reference for every single entry.
+
+---
+
+## 5.5 High-Stakes Triage Scenario: High Collision Hash Flooding CPU Spike
+
+### Scenario Setup
+A test data routing service experiences 100% CPU utilization when processing multi-tenant payloads due to hash collisions.
+
+### Senior Resolution Playbook
+1. **Root Cause:** Poor `hashCode()` distribution maps thousands of entries to a single bucket index.
+2. **Resolution:** Ensure high-entropy hash generation using `Objects.hash(field1, field2)` and leverage Java 8 Red-Black tree conversion ($O(\log N)$ tree nodes) by ensuring keys implement `Comparable`.
+
+---
+
+## 5.6 Anti-Patterns & Critical Pitfalls
+
+- **Mutable Key Objects:** Mutating key state after Insertion causes silent `map.get(key) == null` lookups and memory leaks.
+- **Null Key in Hashtable / ConcurrentHashMap:** Standard `HashMap` permits one `null` key, but `ConcurrentHashMap` throws `NullPointerException`.
+
+## 5.8 Enterprise Relevance at 5,000+ Test Scale
+At 5,000+ parallel test scale, high-throughput caching relies on ConcurrentHashMap segment locks to prevent thread contention.

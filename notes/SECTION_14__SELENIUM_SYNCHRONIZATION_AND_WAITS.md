@@ -232,3 +232,10 @@ public static void clickWithStaleRetry(WebDriver driver, By locator, int maxRetr
 > 2. The element must be displayed to the user: its rendered width and height must be greater than zero, and its CSS computed style cannot be hidden.*
 > 
 > *Attempting to call `.click()` on an element that is only 'present' will throw an `ElementNotInteractableException`. Senior automation must always wait for **visibility** or **clickability** prior to user interaction."*
+
+---
+## 14.5 High-Stakes Triage Scenario & Resolution Playbook
+### Scenario Setup
+Tests intermittently fail on slow CI cloud runners due to timing mismatches.
+### Resolution Playbook
+Replace static `Thread.sleep()` with dynamic `FluentWait` catching `NoSuchElementException` and `StaleElementReferenceException`.

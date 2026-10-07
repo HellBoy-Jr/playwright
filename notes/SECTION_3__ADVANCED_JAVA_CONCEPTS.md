@@ -478,3 +478,70 @@ public final class ParallelExecutionTracker {
 > *WebDriver is inherently non-thread-safe. Interacting with a browser (e.g., navigating, finding an element, clicking) involves multi-step HTTP protocol handshakes. If two parallel threads invoke actions on a `volatile WebDriver`, their commands interleave over the socket, causing `NoSuchSessionException` or browser crashes.*
 > 
 > *For parallel testing, the correct architectural solution is **thread confinement** using `ThreadLocal<WebDriver>`, which guarantees that each executing thread operates on its own dedicated driver instance with zero lock contention."*
+
+---
+
+## 3.25 String Architecture & JVM Memory Layout Masterclass
+
+### Java 9+ Compact Strings (`byte[]` vs `char[]`)
+Prior to Java 9, `String` stored characters in a `char[]` array where every character consumed 2 bytes (16 bits) using UTF-16 encoding. Since over 85% of heap-allocated strings in typical enterprise applications consist only of single-byte ISO-8859-1 / Latin-1 characters, Java 9 introduced **Compact Strings**:
+
+```java
+// Java 9+ String Internal Declaration
+public final class String implements java.io.Serializable, Comparable<String>, CharSequence {
+    @Stable
+    private final byte[] value; // Replaced char[] value
+    private final byte coder;   // 0 = LATIN1 (1 byte/char), 1 = UTF16 (2 bytes/char)
+    private int hash;           // Cached hash code (defaults to 0)
+}
+```
+
+### Exhaustive Java `String` Method Master Reference Table
+
+| Method Signature | Return Type | Description & SDET Use Case | Time Complexity |
+|:---|:---:|:---|:---:|
+| `length()` | `int` | Returns number of UTF-16 code units. | $O(1)$ |
+| `isEmpty()` | `boolean` | Returns `true` if `length() == 0`. | $O(1)$ |
+| `isBlank()` *(Java 11+)* | `boolean` | Returns `true` if empty or contains only whitespace. | $O(N)$ |
+| `charAt(int index)` | `char` | Returns `char` value at specified index. | $O(1)$ |
+| `codePointAt(int index)`| `int` | Returns Unicode code point at index. | $O(1)$ |
+| `substring(int beginIndex)` | `String` | Returns substring from `beginIndex` to end. | $O(N)$ |
+| `substring(int begin, int end)` | `String` | Returns substring from `begin` to `end - 1`. | $O(N)$ |
+| `indexOf(String str)` | `int` | Returns index of first occurrence of substring, or -1. | $O(N \times M)$ |
+| `lastIndexOf(String str)`| `int` | Returns index of last occurrence of substring. | $O(N \times M)$ |
+| `contains(CharSequence s)`| `boolean` | Checks if string contains sequence. | $O(N \times M)$ |
+| `startsWith(String prefix)`| `boolean` | Checks if string starts with prefix. | $O(K)$ |
+| `endsWith(String suffix)` | `boolean` | Checks if string ends with suffix. | $O(K)$ |
+| `equals(Object anObject)` | `boolean` | Structural character-by-character equality check. | $O(N)$ |
+| `equalsIgnoreCase(String s)`| `boolean` | Case-insensitive structural equality check. | $O(N)$ |
+| `compareTo(String s)` | `int` | Lexicographical comparison ($<0, 0, >0$). | $O(N)$ |
+| `toLowerCase()` | `String` | Converts all characters to lowercase. | $O(N)$ |
+| `toUpperCase()` | `String` | Converts all characters to uppercase. | $O(N)$ |
+| `trim()` | `String` | Removes leading & trailing characters $\le \text{U}+0020$. | $O(N)$ |
+| `strip()` *(Java 11+)* | `String` | Removes all Unicode leading & trailing whitespace. | $O(N)$ |
+| `stripLeading()` *(Java 11+)*| `String` | Removes leading Unicode whitespace. | $O(N)$ |
+| `stripTrailing()` *(Java 11+)*| `String` | Removes trailing Unicode whitespace. | $O(N)$ |
+| `repeat(int count)` *(Java 11+)*| `String` | Repeats string `count` times. | $O(N \times C)$ |
+| `replace(CharSequence target, CharSequence replacement)` | `String` | Replaces all literal target occurrences. | $O(N)$ |
+| `replaceAll(String regex, String replacement)` | `String` | Replaces regex matches using Pattern matcher. | $O(N)$ |
+| `replaceFirst(String regex, String replacement)` | `String` | Replaces first regex match. | $O(N)$ |
+| `split(String regex)` | `String[]` | Splits string around regex matches. | $O(N)$ |
+| `split(String regex, int limit)` | `String[]` | Splits string around regex matches up to `limit`. | $O(N)$ |
+| `join(CharSequence delimiter, CharSequence... elements)` | `String` | Joins elements with delimiter. | $O(N)$ |
+| `matches(String regex)` | `boolean` | Compares string against full regex pattern. | $O(N)$ |
+| `toCharArray()` | `char[]` | Converts string to new character array. | $O(N)$ |
+| `getBytes(Charset charset)`| `byte[]` | Encodes string into byte array. | $O(N)$ |
+| `intern()` | `String` | Returns canonical representation from SCP. | $O(1)$ avg |
+| `formatted(Object... args)` *(Java 15+)* | `String` | Instance method equivalent of `String.format()`. | $O(N)$ |
+
+### `String` vs `StringBuilder` vs `StringBuffer` Comparison
+
+```
+Feature             String                  StringBuilder               StringBuffer
+───────             ──────                  ───────────               ────────────
+Mutability          Immutable               Mutable                     Mutable
+Thread Safety       Thread-Safe             Not Thread-Safe             Thread-Safe (Synchronized)
+Performance         Slow for concatenation  Fastest ($O(N)$ buffer)     Slower due to lock overhead
+Storage Location    Heap / SCP              Heap                        Heap
+Buffer Growth Math  N/A                     (oldCapacity * 2) + 2       (oldCapacity * 2) + 2
+```

@@ -1,6 +1,6 @@
 # SECTION 32 — SYSTEM DESIGN FOR SDET
 
-> **Purpose:** System architecture, distributed test infrastructure design, multi-tenant execution platforms, and enterprise observability engineering for Deloitte Senior SDET assessment.
+> **Purpose:** System architecture, distributed test infrastructure design, multi-tenant execution platforms, and enterprise observability engineering for Enterprise Senior SDET / Staff QA Architect assessment (Deloitte, Big 4, FAANG).
 
 ---
 
@@ -112,3 +112,7 @@ scrape_configs:
   3. *Data Isolation:* `ApiDataFactory` creating ephemeral accounts using unique `UUID` strings (`user_${worker_id}_${timestamp}@test.com`).
   4. *Configuration:* HashiCorp Vault injecting environment credentials dynamically per job run.
   5. *Observability:* Unified Allure reporting merged via S3 + Prometheus/Grafana pipeline monitoring.
+
+---
+## 32.6 Anti-Patterns & Critical Pitfalls
+- **Single Monolithic Runner:** Running 10,000 tests on a single VM instead of sharding across Kubernetes pod matrix.

@@ -1,6 +1,6 @@
 # SECTION 29 — FLAKY TEST MANAGEMENT
 
-> **Purpose:** Deep technical guide on non-deterministic test analysis, root-cause categorization, quarantine automation engines, flake rate metrics, and 30-day remediation strategy for Deloitte Senior SDET leadership.
+> **Purpose:** Deep technical guide on non-deterministic test analysis, root-cause categorization, quarantine automation engines, flake rate metrics, and 30-day remediation strategy for Enterprise Senior SDET / Staff QA Architect leadership.
 
 ---
 
@@ -153,3 +153,7 @@ Phase 4: Governance & SLA Enforcement (Days 26–30)
 - **Using `Thread.sleep()` as a Fix:** Hardcoded sleeps slow down tests without guaranteeing element readiness on slow CI runners.
 - **Ignoring Flaky Passes:** Marking a pipeline green when 5 tests passed on retry without tracking or fixing the underlying root cause.
 - **Shared Static Database Data:** Reusing fixed user records (`user_id = 100`) across concurrent workers leads to dynamic data collision failures.
+
+---
+## 29.7 Theory & Low-Level Execution Mechanics
+Flakiness arises when asynchronous execution loops evaluate DOM states before background promises resolve.

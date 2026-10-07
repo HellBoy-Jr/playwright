@@ -273,3 +273,7 @@ public final class GenericApiClient {
 > String s = stringList.get(0); // RUNTIME CRASH: Integer cannot be cast to String!
 > ```
 > *To prevent this runtime corruption, the compiler forbids assigning `List<String>` to `List<Object>`. If you need a method to accept any list regardless of its type parameter, you must use the unbounded wildcard `List<?>`."*
+
+---
+## 6.5 Enterprise Relevance at 5,000+ Test Scale
+Generic Page Factory base classes (`BasePage<T extends BasePage<T>>`) enable type-safe method chaining across multi-tenant test suites.
